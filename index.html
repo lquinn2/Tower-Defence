@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tower Defence</title>
+    <style>
+        html {
+            background-color: teal;
+        }
+
+        canvas {
+            position: absolute;
+            z-index: 1;
+        }
+
+        #ui {
+            background-color: rgb(50, 50, 50);
+            position: absolute;
+            height: 850px;
+            width: 1500px;
+            left: calc((100vw / 2) - 900px);
+            top: calc((100vh / 2) - 425px);
+            border: 2px solid black;
+        }
+        #innerUi{
+            float: right;
+            position: relative;
+            background-color: rgb(70, 70, 70);
+            width: 275px;
+            height: 850px;
+        }
+        #towerHolder {
+            position: relative;
+            background-color: #005e61;
+            margin-left: auto;
+            margin-right: auto;
+            height: 225px;
+            width: 80%;
+            top: 30px;
+        }
+        #towerHeader {
+            border: 1px solid black;
+            height: 40px;
+            width: 100%;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            text-align: center;
+            line-height: 40px;
+            text-transform: uppercase;
+            background-color: teal;
+        }
+        #greenTower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            top: 8px;
+            left: 50px;
+            background-color: green;
+            background-image: url('Graphics/UI/GreenTower.png');
+            background-position: center;
+            background-size: 100%;
+            z-index: 10;
+        }
+        #purpleTower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            top: 88px;
+            left: 50px;
+            background-color: purple;
+            background-image: url('Graphics/UI/PurpleTower.png');
+            background-position: center;
+            background-size: 100%;
+            z-index: 10;
+        }
+        #blueTower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            top: 8px;
+            left: 120px;
+            background-color: blue;
+            background-image: url('Graphics/UI/BlueTower.png');
+            background-position: center;
+            background-size: 100%;
+            z-index: 10;
+        }
+        #goldTower {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            top: 88px;
+            left: 120px;
+            background-color: gold;
+            background-image: url('Graphics/UI/GoldTower.png');
+            background-position: center;
+            background-size: 100%;
+            z-index: 10;
+        }
+        .towerCaption {
+            position: relative;
+            top: 42.5px;
+            line-height: 90%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            text-justify: inter-word;
+        }
+        #greenCaption {
+            color: green;
+            left: -1px;
+        }
+        #purpleCaption {
+            color: purple;
+            left: -4px;
+        }
+        #blueCaption {
+            color: blue;
+        }
+        #goldCaption {
+            color: gold;
+        }
+        #descriptionHolder {
+            display: none;
+            position: relative;
+            background-color: #005e61;
+            margin-left: auto;
+            margin-right: auto;
+            height: 225px;
+            width: 80%;
+            top: 70px;
+        }
+        #descriptionHeader{
+            border: 1px solid black;
+            height: 40px;
+            width: 100%;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+            text-align: center;
+            line-height: 40px;
+            text-transform: uppercase;
+            background-color: teal;
+        }
+        .descriptionTextHeader{
+            font-weight: bold;
+        }
+        .descriptionText {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin: 15px;
+        }
+        .holderContent {
+            position: relative;
+            top: 10px;
+        }
+        #play {
+            position: absolute;
+            top: 150px;
+            right: 250px;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <img id="greenEnemy" src="Graphics/45w/Green Enemy.png" width="0" height="auto" style="display: none;"/>
+        <img id="purpleEnemy" src="Graphics/45w/Purple Enemy.png" width="0" height="auto" style="display: none;"/>
+        <img id="blueEnemy" src="Graphics/45w/Blue Enemy.png" width="0" height="auto" style="display: none;"/>
+        <img id="goldEnemy" src="Graphics/45w/Gold Enemy.png" width="0" height="auto" style="display: none;"/>
+    </div>
+    <div id="game">
+        <div id="ui">
+            <canvas id="canvas" width="1200" height="850"></canvas>
+            <canvas id="canvas2" width="1200" height="850"></canvas>
+            <canvas id="canvas3" width="1200" height="850"></canvas>
+            <canvas id="canvas4" width="1200" height="850"></canvas>
+            <div id="innerUi">
+                <div id="towerHolder">
+                    <div id="towerHeader">
+                        Towers
+                    </div>
+                    <div class="holderContent">
+                        <div id="greenTower" onmouseover="setCurrentlySelected(this)">
+                            <!--<div class="towerCaption" id="greenCaption">Green Tower</div>-->
+                        </div> 
+                        <div id="purpleTower" onmouseover="setCurrentlySelected(this)">
+                            <!--<div class="towerCaption" id="purpleCaption">Purple Tower</div>-->
+                        </div> 
+                        <div id="blueTower" onmouseover="setCurrentlySelected(this)">
+                            <!--<div class="towerCaption" id="blueCaption">Blue Tower</div>-->
+                        </div> 
+                        <div id="goldTower" onmouseover="setCurrentlySelected(this)">
+                            <!--<div class="towerCaption" id="goldCaption">Gold Tower</div>-->
+                        </div> 
+                    </div>
+                </div>
+                <div id="descriptionHolder">
+                    <div id="descriptionHeader">
+                        Stats
+                    </div>
+                    <div id="descriptionName" class="descriptionText">Content</div>
+                    <div id="descriptionDamage" class="descriptionText">Content</div>
+                    <div id="descriptionRange" class="descriptionText">Content</div>
+                </div>
+            </div>
+        </div>
+        <div id="play"></div>
+    </div>
+</body>
+<script src="script.js"></script>
+
+</html>
