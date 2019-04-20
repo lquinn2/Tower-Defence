@@ -185,11 +185,6 @@ for (var i = 0; i < (horizontalSquareCount * verticalSquareCount); i++) {
     xHelper++;
 }
 
-// // Shade grid array
-// for (var i = 0; i < gridArray.length; i++) {
-//     ctx3.fillStyle = "rgba(150, 50, 50, 0.3)";
-//     ctx3.fillRect(gridArray[i].x + 4, gridArray[i].y + 4, 42, 42);
-// }
 
 // Grid shade on hover
 function shadeCellUnderCursor(e){
@@ -215,6 +210,7 @@ function shadeCellUnderCursor(e){
     ctx.restore();
 }
 
+// Place tower on mouse up
 function placeTowerUnderCursor(){
     e = event;
     cursorX = e.clientX;
@@ -264,20 +260,66 @@ var descriptionHolder = document.getElementById('descriptionHolder');
 var descriptionName = document.getElementById('descriptionName');
 var descriptionDamage = document.getElementById('descriptionDamage');
 var descriptionRange = document.getElementById('descriptionRange');
+var upgradeButton = document.getElementById('upgrade');
+var sellButton = document.getElementById('sell');
 
 canvas4.addEventListener('click', function(event){
     var cursorX = event.offsetX;
     var cursorY = event.offsetY;
     console.log(cursorX, cursorY);
+    var foundTower = false;
+
+    function upgradeTower() {
+        var tower = towerArray[upgradeButton.className];
+        if (tower.level < 4) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
+            tower.levelUp();
+            tower.drawRange(true);
+            descriptionName.innerHTML = "<span class='descriptionTextHeader' style='color: " + tower.color + "'>" + tower.name + "</span>";
+            descriptionDamage.innerHTML = "<span class='descriptionTextHeader'> Damage: &nbsp; &nbsp; </span>" + tower.damage;
+            descriptionRange.innerHTML = "<span class='descriptionTextHeader'> Range: &nbsp; &nbsp; </span>" + tower.range;
+            console.log("LEVEL: " + towerArray[upgradeButton.className].level);
+        }
+    }
     
     for (var i = 0; i < towerArray.length; i++) {
         if ((cursorX > towerArray[i].x) && (cursorX < towerArray[i].x + towerArray[i].width) &&
             (cursorY > towerArray[i].y) && (cursorY < towerArray[i].y + towerArray[i].height)) {
+                foundTower = true;    
+                
+                upgradeButton.removeEventListener('click', upgradeTower);
+                // Replaces the node to remove all event listeners and classNames
+                var oldElement = document.getElementById('upgrade');
+                var newElement = oldElement.cloneNode(true);
+                oldElement.parentNode.replaceChild(newElement, oldElement);
+                upgradeButton = document.getElementById('upgrade');
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)"); 
+                towerArray[i].drawRange(true);
                 descriptionHolder.style.display = "block";
                 descriptionName.innerHTML = "<span class='descriptionTextHeader' style='color: " + towerArray[i].color + "'>" + towerArray[i].name + "</span>";
                 descriptionDamage.innerHTML = "<span class='descriptionTextHeader'> Damage: &nbsp; &nbsp; </span>" + towerArray[i].damage;
                 descriptionRange.innerHTML = "<span class='descriptionTextHeader'> Range: &nbsp; &nbsp; </span>" + towerArray[i].range;
+                
+                upgradeButton.className = i;
+                upgradeButton.addEventListener('click', upgradeTower);
             }
+    }
+
+    if (foundTower == false) {
+        descriptionHolder.style.display = "none";
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
+
+        upgradeButton.removeEventListener('click', upgradeTower);
+        // Replaces the node to remove all event listeners and classNames
+        var oldElement = document.getElementById('upgrade');
+        var newElement = oldElement.cloneNode(true);
+        newElement.id = "upgrade";
+        newElement.className = "";
+        oldElement.parentNode.replaceChild(newElement, oldElement);      
     }
 });
 
@@ -449,7 +491,7 @@ class GreenTower extends Tower {
     createRange(level) {
         switch (level) {
             case 1:
-                this.name += " level " + this.level;
+                this.name = "Green Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -459,7 +501,7 @@ class GreenTower extends Tower {
             case 2:
                 this.damage = 1.5;
                 this.range = 150;
-                this.name += " level " + this.level;
+                this.name = "Green Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -469,7 +511,7 @@ class GreenTower extends Tower {
             case 3:
                 this.damage = 2;
                 this.range = 175;
-                this.name += " level " + this.level;
+                this.name = "Green Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -479,7 +521,7 @@ class GreenTower extends Tower {
             case 4:
                 this.damage = 2.75;
                 this.range = 200;
-                this.name += " level " + this.level;
+                this.name = "Green Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -528,6 +570,126 @@ class GreenTower extends Tower {
     levelUp() {
         if (this.level < 4) {
             this.level++;
+            ctx2.clearRect(this.x - 1, this.y - 1, 49, 49);
+            var x = this.x;
+            var y = this.y;
+
+            // Shape
+            ctx2.beginPath();
+            ctx2.rect(x, y, this.width, this.height);
+            ctx2.fillStyle = this.backgroundColor;
+            ctx2.fill();
+            ctx2.closePath();
+            ctx2.beginPath();
+            ctx2.lineWidth = 1;
+            ctx2.strokeStyle = this.color;
+            ctx2.strokeRect(x, y, this.width, this.height);
+            switch (this.level) {
+                case 1:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 1 decal
+                    ctx2.moveTo(x + (this.width / 3), y + (this.height / 3));
+                    ctx2.lineTo(x + 2 * (this.width / 3), y + 2 * (this.height / 3));
+                    ctx2.stroke();
+                    ctx2.moveTo(x + (this.width / 3), y + 2 * (this.height / 3));
+                    ctx2.lineTo(x + 2 * (this.width / 3), y + (this.height / 3));
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    break;
+                case 2:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 1 decal
+                    ctx2.moveTo(x + (this.width / 3), y + (this.height / 3));
+                    ctx2.lineTo(x + 2 * (this.width / 3), y + 2 * (this.height / 3));
+                    ctx2.stroke();
+                    ctx2.moveTo(x + (this.width / 3), y + 2 * (this.height / 3));
+                    ctx2.lineTo(x + 2 * (this.width / 3), y + (this.height / 3));
+                    ctx2.stroke();
+                    // level 2 decal
+                    ctx2.moveTo(x + (this.width / 3), y + (this.height / 3));
+                    ctx2.lineTo(x + (this.width / 3), y + 2*(this.height / 3));
+                    ctx2.stroke();
+                    ctx2.moveTo(x + 2*(this.width / 3), y + (this.height / 3));
+                    ctx2.lineTo(x + 2*(this.width / 3), y + 2*(this.height / 3));
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    break;
+                case 3:
+                    // Create Range
+                    this.createRange(this.level);
+                    ctx2.moveTo(x + (this.width / 3), y + (this.height / 3));
+                    ctx2.lineTo(x + 2 * (this.width / 3), y + 2 * (this.height / 3));
+                    ctx2.stroke();
+                    ctx2.moveTo(x + (this.width / 3), y + 2 * (this.height / 3));
+                    ctx2.lineTo(x + 2 * (this.width / 3), y + (this.height / 3));
+                    ctx2.stroke();
+                    // level 2 decal
+                    ctx2.moveTo(x + (this.width / 4), y + (this.height / 4));
+                    ctx2.lineTo(x + (this.width / 4), y + 3*(this.height / 4));
+                    ctx2.stroke();
+                    ctx2.moveTo(x + 3*(this.width / 4), y + (this.height / 4));
+                    ctx2.lineTo(x + 3*(this.width / 4), y + 3*(this.height / 4));
+                    ctx2.stroke();
+                    // level 3 decal
+                    ctx2.moveTo(x + (this.width / 4), y + (this.height / 4));
+                    ctx2.lineTo(x + 3*(this.width / 4), y + (this.height / 4));
+                    ctx2.stroke();
+                    ctx2.moveTo(x + (this.width / 4), y + 3*(this.height / 4));
+                    ctx2.lineTo(x + 3*(this.width / 4), y + 3*(this.height / 4));
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    break;
+                case 4:
+                    // Create Range
+                    this.createRange(this.level);
+                    ctx2.moveTo(x + (this.width / 3), y + (this.height / 3));
+                    ctx2.lineTo(x + 2 * (this.width / 3), y + 2 * (this.height / 3));
+                    ctx2.stroke();
+                    ctx2.moveTo(x + (this.width / 3), y + 2 * (this.height / 3));
+                    ctx2.lineTo(x + 2 * (this.width / 3), y + (this.height / 3));
+                    ctx2.stroke();
+                    // level 2 decal
+                    ctx2.moveTo(x + (this.width / 4), y + (this.height / 4));
+                    ctx2.lineTo(x + (this.width / 4), y + 3*(this.height / 4));
+                    ctx2.stroke();
+                    ctx2.moveTo(x + 3*(this.width / 4), y + (this.height / 4));
+                    ctx2.lineTo(x + 3*(this.width / 4), y + 3*(this.height / 4));
+                    ctx2.stroke();
+                    // level 3 decal
+                    ctx2.moveTo(x + (this.width / 4), y + (this.height / 4));
+                    ctx2.lineTo(x + 3*(this.width / 4), y + (this.height / 4));
+                    ctx2.stroke();
+                    ctx2.moveTo(x + (this.width / 4), y + 3*(this.height / 4));
+                    ctx2.lineTo(x + 3*(this.width / 4), y + 3*(this.height / 4));
+                    ctx2.stroke();
+                    // level 4 decal
+                    ctx2.moveTo(x, y);
+                    ctx2.lineTo(x + this.width, y + this.height);
+                    ctx2.stroke();
+                    ctx2.moveTo(x, y + this.width);
+                    ctx2.lineTo(x + this.width, y);
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    break;
+            }
+        }
+    }
+
+    drawRange(bool) {
+        switch (bool) {
+            case true:
+                // Range Circle
+                ctx.beginPath();
+                ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.closePath();
+                break;
+            case false:
+                ctx.clearRect(this.x - (this.range / 2), this.y - (this.range / 2), this.range, this.range);
+                drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
+                break;
         }
     }
 }
@@ -651,7 +813,7 @@ class PurpleTower extends Tower {
     createRange(level) {
         switch (level) {
             case 1:
-                this.name += " level " + this.level;
+                this.name = "Purple Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -660,7 +822,7 @@ class PurpleTower extends Tower {
                 break;
             case 2:
                 this.range = 200; 
-                this.name += " level " + this.level;
+                this.name = "Purple Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -669,7 +831,7 @@ class PurpleTower extends Tower {
                 break;
             case 3:
                 this.range = 230;
-                this.name += " level " + this.level;
+                this.name = "Purple Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -678,7 +840,7 @@ class PurpleTower extends Tower {
                 break;
             case 4:
                 this.range = 275;
-                this.name += " level " + this.level;
+                this.name = "Purple Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -725,7 +887,118 @@ class PurpleTower extends Tower {
     }
 
     levelUp() {
+        if (this.level < 4) {
+            this.level++;
+            ctx2.clearRect(this.x - 1, this.y - 1, 49, 49);
+            var x = this.x;
+            var y = this.y;
 
+            // Shape
+            ctx2.beginPath();
+            ctx2.rect(x, y, this.width, this.height);
+            ctx2.fillStyle = this.backgroundColor;
+            ctx2.fill();
+            ctx2.closePath();
+            ctx2.beginPath();
+            ctx2.lineWidth = 1;
+            ctx2.strokeStyle = this.color;
+            ctx2.strokeRect(x, y, this.width, this.height);
+            // Decal
+            switch(this.level){
+                case 1:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 1 decal
+                    ctx2.moveTo(x + this.width/2, y + 2*this.height/6);
+                    ctx2.lineTo(x + 4*this.width/6, y + 4*this.height/6);
+                    ctx2.lineTo(x + 2*this.width/6, y + 4*this.height/6);
+                    ctx2.lineTo(x + this.width/2, y + 2*this.height/6);
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    break;
+                case 2:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 2 decal
+                    ctx2.moveTo(x + this.width/6, y + 2*this.height/8);
+                    ctx2.lineTo(x + this.width/6, y + 6*this.height/8);
+                    ctx2.lineTo(x + 3.5*this.width/8, y + this.height/2);
+                    ctx2.lineTo(x + this.width/6, y + 2*this.height/8);
+                    ctx2.stroke();
+                    ctx2.moveTo(x + 5*this.width/6, y + 2*this.height/8);
+                    ctx2.lineTo(x + 5*this.width/6, y + 6*this.height/8);
+                    ctx2.lineTo(x + 4.5*this.width/8, y + this.height/2);
+                    ctx2.lineTo(x + 5*this.width/6, y + 2*this.height/8);
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    break;
+                case 3:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 3 decal
+                    ctx2.lineWidth = 1.5;
+                    ctx2.moveTo(x + 2.5*this.width/8, y + 6.2*this.width/8);
+                    ctx2.lineTo(x + this.width/2, y + 4.7*this.width/8);
+                    ctx2.lineTo(x + 5*this.width/8, y + 6.2*this.width/8);
+                    ctx2.lineTo(x + 2.5*this.width/8, y + 6.2*this.width/8);
+                    ctx2.stroke();
+                    ctx2.moveTo(x + 3.5*this.width/8, y + 3.7*this.width/8);
+                    ctx2.lineTo(x + 1.5*this.width/8, y + 3.2*this.width/8);
+                    ctx2.lineTo(x + 3 *this.width/8, y + 1.7*this.width/8);
+                    ctx2.lineTo(x + 3.5*this.width/8, y + 3.2*this.width/8);
+                    ctx2.stroke();
+                    ctx2.moveTo(x + 4.5*this.width/8, y + 3.7*this.width/8);
+                    ctx2.lineTo(x + 6.5*this.width/8, y + 3.2*this.width/8);
+                    ctx2.lineTo(x + 5*this.width/8, y + 1.7*this.width/8);
+                    ctx2.lineTo(x + 4.5*this.width/8, y + 3.7*this.width/8);
+                    ctx2.stroke();
+                    ctx2.lineWidth = 1;
+                    ctx2.closePath();
+                    break;
+                case 4:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 2 decal
+                    ctx2.moveTo(x + 0.8*this.width/6, y + 2*this.height/8);
+                    ctx2.lineTo(x + 0.8*this.width/6, y + 6*this.height/8);
+                    ctx2.lineTo(x + 3*this.width/8, y + this.height/2);
+                    ctx2.lineTo(x + 0.8*this.width/6, y + 2*this.height/8);
+                    ctx2.stroke();
+                    ctx2.moveTo(x + 5.2*this.width/6, y + 2*this.height/8);
+                    ctx2.lineTo(x + 5.2*this.width/6, y + 6*this.height/8);
+                    ctx2.lineTo(x + 5*this.width/8, y + this.height/2);
+                    ctx2.lineTo(x + 5.2*this.width/6, y + 2*this.height/8);
+                    ctx2.stroke();
+                    // level 4 decal
+                    ctx2.moveTo(x + 2*this.width/8, y + this.height/8);
+                    ctx2.lineTo(x + this.width/2, y + 3*this.height/8);
+                    ctx2.lineTo(x + 6*this.width/8, y + this.height/8);
+                    ctx2.lineTo(x + 2*this.width/8, y + this.height/8);
+                    ctx2.stroke();
+                    ctx2.moveTo(x + 2*this.width/8, y + 7*this.height/8);
+                    ctx2.lineTo(x + this.width/2, y + 5*this.height/8);
+                    ctx2.lineTo(x + 6*this.width/8, y + 7*this.height/8);
+                    ctx2.lineTo(x + 2*this.width/8, y + 7*this.height/8);
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    break;
+            }
+        }
+    }
+    drawRange(bool) {
+        switch (bool) {
+            case true:
+                // Range Circle
+                ctx.beginPath();
+                ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.closePath();
+                break;
+            case false:
+                ctx.clearRect(this.x - (this.range / 2), this.y - (this.range / 2), this.range, this.range);
+                drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
+                break;
+        }
     }
 }
 
@@ -806,7 +1079,7 @@ class BlueTower extends Tower {
     createRange(level) {
         switch (level) {
             case 1:
-                this.name += " level " + this.level;
+                this.name = "Blue Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -815,7 +1088,7 @@ class BlueTower extends Tower {
                 break;
             case 2:
                 this.range = 115;
-                this.name += " level " + this.level;
+                this.name = "Blue Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -824,7 +1097,7 @@ class BlueTower extends Tower {
                 break;
             case 3:
                 this.range = 130;
-                this.name += " " + this.level;
+                this.name = "Blue Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -833,7 +1106,7 @@ class BlueTower extends Tower {
                 break;
             case 4:
                 this.range = 150;
-                this.name += " level " + this.level;
+                this.name = "Blue Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -880,7 +1153,77 @@ class BlueTower extends Tower {
     }
 
     levelUp() {
+        if (this.level < 4) {
+            this.level++;
+            ctx2.clearRect(this.x - 1, this.y - 1, 49, 49);
+            var x = this.x;
+            var y = this.y;
 
+            // Shape
+            ctx2.beginPath();
+            ctx2.rect(x, y, this.width, this.height);
+            ctx2.fillStyle = this.backgroundColor;
+            ctx2.fill();
+            ctx2.closePath();
+            ctx2.beginPath();
+            ctx2.lineWidth = 1;
+            ctx2.strokeStyle = this.color;
+            ctx2.strokeRect(x, y, this.width, this.height);
+            ctx2.closePath();
+            // Decal
+            switch(this.level){
+                case 1:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 1 decal
+                    ctx2.strokeRect(x + this.width/3, y + this.height/3, this.width/3, this.height/3);
+                    ctx2.closePath();
+                    break;
+                case 2:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 2 decal
+                    ctx2.lineWidth = 2;
+                    ctx2.strokeRect(x + this.width/4, y + this.height/4, 2*this.width/4, 2*this.height/4);
+                    ctx2.closePath();
+                    ctx2.lineWidth = 1;
+                    break;
+                case 3:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 3 decal
+                    ctx2.lineWidth = 5;
+                    ctx2.strokeRect(x + this.width/4, y + this.height/4, 2*this.width/4, 2*this.height/4);
+                    ctx2.closePath();
+                    ctx2.lineWidth = 1;
+                    break;
+                case 4:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 4 decal
+                    ctx2.lineWidth = 8;
+                    ctx2.strokeRect(x + this.width/4, y + this.height/4, 2*this.width/4, 2*this.height/4);
+                    ctx2.closePath();
+                    ctx2.lineWidth = 1;
+                    break;
+            }
+        }
+    }
+
+    drawRange(bool) {
+        switch (bool) {
+            case true:
+                // Range Circle
+                ctx.beginPath();
+                ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.closePath();
+                break;
+            case false:
+                ctx.clearRect(this.x - (this.range / 2), this.y - (this.range / 2), this.range, this.range);
+                drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
+                break;
+        }
     }
 }
 
@@ -994,7 +1337,7 @@ class GoldTower extends Tower {
     createRange(level) {
         switch (level) {
             case 1:
-                this.name += " level " + this.level;
+                this.name = "Gold Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -1003,7 +1346,7 @@ class GoldTower extends Tower {
                 break;
             case 2:
                 this.range = 160;
-                this.name += " level " + this.level;
+                this.name = "Gold Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -1012,7 +1355,7 @@ class GoldTower extends Tower {
                 break;
             case 3:
                 this.range = 180;
-                this.name += " level " + this.level;
+                this.name = "Gold Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -1021,7 +1364,7 @@ class GoldTower extends Tower {
                 break;
             case 4:
                 this.range = 215;
-                this.name += " level " + this.level;            
+                this.name = "Gold Tower level " + this.level;            
                 // // Range Circle
                 // ctx.beginPath();
                 // ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
@@ -1068,7 +1411,110 @@ class GoldTower extends Tower {
     }
 
     levelUp() {
+        if (this.level < 4) {
+            this.level++;
+            ctx2.clearRect(this.x - 1, this.y - 1, 49, 49);
+            var x = this.x;
+            var y = this.y;
 
+            // Shape
+        ctx2.beginPath();
+        ctx2.rect(x, y, this.width, this.height);
+        ctx2.fillStyle = this.backgroundColor;
+        ctx2.fill();
+        ctx2.closePath();
+        ctx2.beginPath();
+        ctx2.lineWidth = 1;
+        ctx2.strokeStyle = this.color;
+        ctx2.strokeRect(x, y, this.width, this.height);
+        ctx2.closePath();
+        // Decal
+        switch(this.level){
+            case 1:
+                // Create Range
+                this.createRange(this.level);
+                // level 1 decal
+                ctx2.arc(x + this.width/2, y + this.height/2, 4, Math.PI, 4*Math.PI);
+                ctx2.stroke();
+                ctx2.closePath();
+                break;
+            case 2:
+                // Create Range
+                this.createRange(this.level);
+                // level 1 decal with fill
+                ctx2.arc(x + this.width/2, y + this.height/2, 2, 2*Math.PI, 4*Math.PI);
+                ctx2.fillStyle = "gold";
+                ctx2.fill();
+                ctx2.stroke();
+                ctx2.closePath();
+                // level 2 decal
+                ctx2.beginPath();
+                ctx2.arc(x + this.width/2, y + this.height/2, 8, 0*Math.PI, 4*Math.PI);
+                ctx2.stroke();
+                ctx2.closePath();
+                break;
+            case 3:
+                // Create Range
+                this.createRange(this.level);
+                // level 1 decal with fill
+                ctx2.arc(x + this.width/2, y + this.height/2, 2, 2*Math.PI, 4*Math.PI);
+                ctx2.fillStyle = "gold";
+                ctx2.fill();
+                ctx2.stroke();
+                ctx2.closePath();
+                // level 2 decal
+                ctx2.beginPath();
+                ctx2.arc(x + this.width/2, y + this.height/2, 7, 0*Math.PI, 4*Math.PI);
+                ctx2.stroke();
+                ctx2.closePath();
+                // level 32 decal
+                ctx2.beginPath();
+                ctx2.arc(x + this.width/2, y + this.height/2, 12, 0*Math.PI, 4*Math.PI);
+                ctx2.closePath();
+                ctx2.stroke();
+                break;
+            case 4:
+                // Create Range
+                this.createRange(this.level);
+                ctx2.lineWidth = 1;
+                // level 3 decal
+                ctx2.beginPath();
+                ctx2.arc(x + this.width/2, y + this.height/2, 2, 0*Math.PI, 4*Math.PI);
+                ctx2.fill();
+                ctx2.stroke();
+                ctx2.closePath();
+                ctx2.beginPath();
+                ctx2.arc(x + this.width/2, y + this.height/2, 7, 0*Math.PI, 4*Math.PI);
+                ctx2.closePath();
+                ctx2.stroke();
+                ctx2.beginPath();
+                ctx2.arc(x + this.width/2, y + this.height/2, 12, 0*Math.PI, 4*Math.PI);
+                ctx2.closePath();
+                ctx2.stroke();
+                // level 4 decal
+                ctx2.beginPath();
+                ctx2.arc(x + this.width/2, y + this.height/2, 17, 0*Math.PI, 4*Math.PI);
+                ctx2.closePath();
+                ctx2.stroke();
+                break;
+        }
+        }
+    }
+
+    drawRange(bool) {
+        switch (bool) {
+            case true:
+                // Range Circle
+                ctx.beginPath();
+                ctx.arc(this.x + (this.width / 2), this.y + (this.height / 2), this.range, 0, 2 * Math.PI);
+                ctx.stroke();
+                ctx.closePath();
+                break;
+            case false:
+                ctx.clearRect(this.x - (this.range / 2), this.y - (this.range / 2), this.range, this.range);
+                drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
+                break;
+        }
     }
 }
 
@@ -1196,12 +1642,12 @@ class Enemy {
 
 //-- Green Enemy --//
 class GreenEnemy extends Enemy {
-    constructor(health, money, id){
+    constructor(health, money, id, speed){
         super(health, money);
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
-        this.speed = 1.2;
+        this.speed =  speed * 1.2;
         var thisEnemy = document.createElement("IMG");
         thisEnemy.setAttribute("src", "Graphics/45w/Green Enemy.png");
         thisEnemy.setAttribute("id", id);
@@ -1226,29 +1672,24 @@ class GreenEnemy extends Enemy {
         switch(this.direction){
             case "up":
                 ctx3.save();
-                //ctx3.clearRect(0, 0, canvas.width, canvas.height);
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(270, this.img, this.coordinate.x, this.coordinate.y, "up", "green");
                 ctx3.restore();
                 break;
             case "down":
                 ctx3.save();
-                //// Original glitch
-                //ctx3.clearRect(0, 0, canvas.width, canvas.height);
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(90, this.img, this.coordinate.x, this.coordinate.y, "down", "green");
                 ctx.restore();
                 break;
             case "left":
                 ctx3.save();
-                //ctx3.clearRect(0, 0, canvas.width, canvas.height);
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(180, this.img, this.coordinate.x, this.coordinate.y, "left", "green");
                 ctx3.restore();
                 break;
             case "right":
                 ctx3.save();
-                //ctx3.clearRect(0, 0, canvas.width, canvas.height);
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 ctx3.drawImage(this.img, this.coordinate.x, this.coordinate.y + 7);
                 ctx3.restore();                
@@ -1347,12 +1788,12 @@ class GreenEnemy extends Enemy {
 
 //-- Purple Enemy --//
 class PurpleEnemy extends Enemy {
-    constructor(health, money){
+    constructor(health, money, speed){
         super(health * 2, money);
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
-        this.speed = 0.7;
+        this.speed = speed * 0.7;
         this.img = document.getElementById("purpleEnemy");
     }
 
@@ -1484,12 +1925,12 @@ class PurpleEnemy extends Enemy {
 
 //-- Blue Enemy --//
 class BlueEnemy extends Enemy {
-    constructor(health, money){
+    constructor(health, money, speed){
         super(health * 0.9, money);
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
-        this.speed = 1;
+        this.speed = speed * 1;
         this.img = document.getElementById("blueEnemy");
     }
 
@@ -1623,12 +2064,12 @@ class BlueEnemy extends Enemy {
 
 //-- Gold Enemy --//
 class GoldEnemy extends Enemy {
-    constructor(health, money){
+    constructor(health, money, speed){
         super(health * 0.65, money);
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
-        this.speed = 2;
+        this.speed = speed * 2.1;
         this.img = document.getElementById("goldEnemy");
     }
 
@@ -1779,6 +2220,7 @@ var rounds = [
         p: 0,
         baseHealth: 120,
         baseMoney: 50,
+        baseSpeed: 1,
         count: function() {
             return (this.g + this.p + this.b + this.y);
         }
@@ -1790,6 +2232,7 @@ var rounds = [
         p: 10,
         baseHealth: 175,
         baseMoney: 55,
+        baseSpeed: 1,
         count: function() {
             return (this.g + this.p + this.b + this.y);
         }
@@ -1801,6 +2244,7 @@ var rounds = [
         p: 0,
         baseHealth: 250,
         baseMoney: 60,
+        baseSpeed: 1,
         count: function() {
             return (this.g + this.p + this.b + this.y);
         }
@@ -1812,6 +2256,7 @@ var rounds = [
         p: 0,
         baseHealth: 350,
         baseMoney: 65,
+        baseSpeed: 1,
         count: function() {
             return (this.g + this.p + this.b + this.y);            
         }
@@ -1823,6 +2268,7 @@ var rounds = [
         p: 0,
         baseHealth: 400,
         baseMoney: 70,
+        baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
         }
@@ -1834,6 +2280,7 @@ var rounds = [
         p: 7,
         baseHealth: 500,
         baseMoney: 75,
+        baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
         }
@@ -1845,6 +2292,7 @@ var rounds = [
         p: 4,
         baseHealth: 550,
         baseMoney: 80,
+        baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
         }
@@ -1856,6 +2304,7 @@ var rounds = [
         p: 0,
         baseHealth: 700,
         baseMoney: 85,
+        baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
         }
@@ -1867,6 +2316,7 @@ var rounds = [
         p: 12,
         baseHealth: 750,
         baseMoney: 90,
+        baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
         }
@@ -1878,21 +2328,29 @@ var rounds = [
         p: 10,
         baseHealth: 1000,
         baseMoney: 100,
+        baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
         }
     }
 ];
 
+var deadEnemies = [];
+var lastEnemyCreated = false;
+
 function checkWaveComplete() {
-    var deadEnemies = [];
+    deadEnemies = [];
+
     for (var i = 0; i < enemyArray.length; i++) {
         if (!enemyArray[i]) {
             deadEnemies.push("dead");
         }
     }
-    if (deadEnemies.length == enemyArray.length) {
-        return true;
+    console.warn(deadEnemies.length);
+    if (lastEnemyCreated) {
+        if (deadEnemies.length == enemyArray.length) {
+            return true;
+        }
     }
 }
 
@@ -1900,7 +2358,7 @@ function checkWaveComplete() {
 
 {
 var greenTower = new GreenTower(1);
-greenTower.draw(350, 150);
+greenTower.draw(-350, -150);
 
 // //var purpleTower = new PurpleTower(1);
 // purpleTower.draw(850, 50);
@@ -1935,8 +2393,8 @@ greenTower.draw(350, 150);
 // var goldTower = new GoldTower(3);
 // //goldTower.draw(700, 150);
 
-var greenTower2 = new GreenTower(4);
-greenTower2.draw(850, 150);
+// var greenTower2 = new GreenTower(4);
+// greenTower2.draw(850, 150);
 
 // var purpleTower = new PurpleTower(4);
 // //purpleTower.draw(1000, 50);
@@ -2018,7 +2476,8 @@ function play(){
 }
 
 function createRound(round){
-    console.log(towerArray);
+    console.log("TOWER ARRAY: " + towerArray);
+    lastEnemyCreated = false;
     enemyArray = [];
     enemyArrayMap = [];
     var greens = round.g;
@@ -2027,44 +2486,46 @@ function createRound(round){
     var yellows = round.y;
     var health = round.baseHealth;
     var money = round.baseMoney;
+    var speed = round.baseSpeed;
     var totalEnemies = round.count();
 
+    for (var i = 0; i < yellows; i++) {
+        enemyArrayMap.push("yellow");
+    }
+    for (var i = 0; i < blues; i++) {
+        enemyArrayMap.push("blue");
+    }
     for (var i = 0; i < greens; i++) {
         enemyArrayMap.push("green");
     }
     for (var i = 0; i < purples; i++) {
         enemyArrayMap.push("purple");
     }
-    for (var i = 0; i < blues; i++) {
-        enemyArrayMap.push("blue");
-    }
-    for (var i = 0; i < yellows; i++) {
-        enemyArrayMap.push("yellow");
-    }
 
     var enemy = 0;
     console.log("Total enemies: " + totalEnemies);
 
     function createEnemy(){
-        if (enemy < totalEnemies) {
+        if (enemy <= totalEnemies) {
             console.log("Enemy#" + (enemy + 1));
             switch (enemyArrayMap[enemy]) {
                 case "green":
-                    enemyArray[enemy] = new GreenEnemy(health, money, enemy);
+                    enemyArray[enemy] = new GreenEnemy(health, money, enemy, speed);
                     break;
                 case "purple":
-                    enemyArray[enemy] = new PurpleEnemy(health, money, enemy);   
+                    enemyArray[enemy] = new PurpleEnemy(health, money, speed);   
                     break;
                 case "blue":
-                    enemyArray[enemy] = new BlueEnemy(health, money, enemy);
+                    enemyArray[enemy] = new BlueEnemy(health, money, speed);
                     break;
                 case "yellow":
-                    enemyArray[enemy] = new GoldEnemy(health, money, enemy);
+                    enemyArray[enemy] = new GoldEnemy(health, money, speed);
                     break;                
             }
             enemy++;
         } else {
             console.log(enemyArray);
+            lastEnemyCreated = true;
             checkWaveComplete();
             clearInterval(enemyLoop);  
         }
