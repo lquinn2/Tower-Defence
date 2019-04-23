@@ -282,6 +282,22 @@ canvas4.addEventListener('click', function(event){
             console.log("LEVEL: " + towerArray[upgradeButton.className].level);
         }
     }
+
+    function sellTower() {
+        console.log("selling: " + towerArray[upgradeButton.className]);
+        var tower = towerArray[upgradeButton.className];
+        ctx2.clearRect(tower.x - 1, tower.y - 1, tower.width + 2, tower.height + 2);
+        towerArray.splice(upgradeButton.className, 1);
+
+        upgradeButton.className = "";
+
+        setTimeout(hideDescriptionHolder, 10);
+        function hideDescriptionHolder() {
+            descriptionHolder.style.visibility = "hidden";
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
+        }
+    }
     
     for (var i = 0; i < towerArray.length; i++) {
         if ((cursorX > towerArray[i].x) && (cursorX < towerArray[i].x + towerArray[i].width) &&
@@ -294,22 +310,24 @@ canvas4.addEventListener('click', function(event){
                 var newElement = oldElement.cloneNode(true);
                 oldElement.parentNode.replaceChild(newElement, oldElement);
                 upgradeButton = document.getElementById('upgrade');
+                sellButton = document.getElementById('sell');
 
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)"); 
                 towerArray[i].drawRange(true);
-                descriptionHolder.style.display = "block";
+                descriptionHolder.style.visibility = "visible";
                 descriptionName.innerHTML = "<span class='descriptionTextHeader' style='color: " + towerArray[i].color + "'>" + towerArray[i].name + "</span>";
                 descriptionDamage.innerHTML = "<span class='descriptionTextHeader'> Damage: &nbsp; &nbsp; </span>" + towerArray[i].damage;
                 descriptionRange.innerHTML = "<span class='descriptionTextHeader'> Range: &nbsp; &nbsp; </span>" + towerArray[i].range;
                 
                 upgradeButton.className = i;
                 upgradeButton.addEventListener('click', upgradeTower);
+                sellButton.addEventListener('click', sellTower);
             }
     }
 
     if (foundTower == false) {
-        descriptionHolder.style.display = "none";
+        descriptionHolder.style.visibility = "hidden";
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
 
@@ -319,7 +337,15 @@ canvas4.addEventListener('click', function(event){
         var newElement = oldElement.cloneNode(true);
         newElement.id = "upgrade";
         newElement.className = "";
-        oldElement.parentNode.replaceChild(newElement, oldElement);      
+        oldElement.parentNode.replaceChild(newElement, oldElement); 
+        
+        sellButton.removeEventListener('click', sellTower);
+        // Replaces sell node
+        oldElement = document.getElementById('sell');
+        newElement = oldElement.cloneNode(true);
+        newElement.id = "sell";
+        newElement.className = "";
+        oldElement.parentNode.replaceChild(newElement, oldElement);
     }
 });
 
@@ -376,6 +402,7 @@ class GreenTower extends Tower {
         this.y = 0;
         this.range = 125;
         this.damage = 1;
+        this.price = 100;
     }
 
     draw(x, y) {
@@ -501,6 +528,7 @@ class GreenTower extends Tower {
             case 2:
                 this.damage = 1.5;
                 this.range = 150;
+                this.value = 300;
                 this.name = "Green Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
@@ -511,6 +539,7 @@ class GreenTower extends Tower {
             case 3:
                 this.damage = 2;
                 this.range = 175;
+                this.value = 800;
                 this.name = "Green Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
@@ -521,6 +550,7 @@ class GreenTower extends Tower {
             case 4:
                 this.damage = 2.75;
                 this.range = 200;
+                this.value = 1500;
                 this.name = "Green Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
@@ -1528,6 +1558,8 @@ function drawRotated(degrees, image, positionx, positiony, initialDirection, ene
             // Switch case for green enemies
             switch(initialDirection){
                 case "up":
+                // console.warn("POS X: " + x);
+                // console.warn("    POS Y: " + y);
                     x = x + 8;
                     y = y + 48;
                     break;
@@ -1669,30 +1701,68 @@ class GreenEnemy extends Enemy {
     }
 
     draw(){
+        // Draw body
         switch(this.direction){
             case "up":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(270, this.img, this.coordinate.x, this.coordinate.y, "up", "green");
                 ctx3.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "down":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(90, this.img, this.coordinate.x, this.coordinate.y, "down", "green");
                 ctx.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.rotate(90 * Math.PI / 180);
+                ctx3.moveTo(this.coordinate.x - this.coordinate.x - 4.5, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x - this.coordinate.x + 39, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "left":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(180, this.img, this.coordinate.x, this.coordinate.y, "left", "green");
                 ctx3.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3.5);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3.5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "right":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 ctx3.drawImage(this.img, this.coordinate.x, this.coordinate.y + 7);
-                ctx3.restore();                
+                ctx3.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3.5);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3.5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
         }
     }
@@ -1814,24 +1884,61 @@ class PurpleEnemy extends Enemy {
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(270, this.img, this.coordinate.x, this.coordinate.y, "up", "purple");
                 ctx3.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "down":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(90, this.img, this.coordinate.x, this.coordinate.y, "down", "purple");
                 ctx.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.rotate(90 * Math.PI / 180);
+                ctx3.moveTo(this.coordinate.x - this.coordinate.x - 4.5, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x - this.coordinate.x + 39, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "left":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(180, this.img, this.coordinate.x, this.coordinate.y + 7, "left", "purple");
                 ctx3.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "right":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 ctx3.drawImage(this.img, this.coordinate.x, this.coordinate.y + 7);
-                ctx3.restore();                
+                ctx3.restore();
+                
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3);
+                ctx3.stroke();
+                ctx3.closePath();               
                 break;
         }
     }
@@ -1951,24 +2058,62 @@ class BlueEnemy extends Enemy {
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);                
                 drawRotated(270, this.img, this.coordinate.x, this.coordinate.y, "up", "blue");
                 ctx3.restore();
+
+                
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y - 3.5);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y - 3.5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "down":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55)
                 drawRotated(90, this.img, this.coordinate.x, this.coordinate.y, "down", "blue");
                 ctx.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.rotate(90 * Math.PI / 180);
+                ctx3.moveTo(this.coordinate.x - this.coordinate.x + 32, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x - this.coordinate.x - 11.5, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "left":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55)
                 drawRotated(180, this.img, this.coordinate.x, this.coordinate.y, "left", "blue");
                 ctx3.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y + 7);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y + 7);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "right":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 ctx3.drawImage(this.img, this.coordinate.x, this.coordinate.y + 14);
-                ctx3.restore();                
+                ctx3.restore();
+                
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 1, this.coordinate.y + 7);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 44.5, this.coordinate.y + 7);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
         }
     }
@@ -2090,24 +2235,62 @@ class GoldEnemy extends Enemy {
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(270, this.img, this.coordinate.x, this.coordinate.y, "up", "gold");
                 ctx3.restore();
+
+                
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "down":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(90, this.img, this.coordinate.x, this.coordinate.y, "down", "gold");
                 ctx.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.rotate(90 * Math.PI / 180);
+                ctx3.moveTo(this.coordinate.x - this.coordinate.x - 4.5, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x - this.coordinate.x + 39, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "left":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(180, this.img, this.coordinate.x, this.coordinate.y + 7, "left", "gold");
                 ctx3.restore();
+
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 4.5);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 4.5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "right":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 ctx3.drawImage(this.img, this.coordinate.x, this.coordinate.y + 7);
-                ctx3.restore();                
+                ctx3.restore(); 
+                
+                // Draw health bar
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3.5);
+                ctx3.lineWidth = 3;
+                ctx3.strokeStyle = "red";
+                ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3.5);
+                ctx3.stroke();
+                ctx3.closePath(); 
                 break;
         }
     }
@@ -2137,7 +2320,7 @@ class GoldEnemy extends Enemy {
     checkIfShouldChangeDirection(){
         switch(this.direction){
             case "up":
-                if (this.coordinate.y <= waypoints[this.waypoint + 1].y){
+                if (this.coordinate.y <= waypoints[this.waypoint + 1].y + 1){
                     this.changeDirection(waypoints[this.waypoint + 1].direction);
                     if (this.waypoint != 15) {
                         this.waypoint += 1;
@@ -2153,7 +2336,7 @@ class GoldEnemy extends Enemy {
                 }
                 break;
             case "left":
-                if (this.coordinate.x <= waypoints[this.waypoint + 1].x){
+                if (this.coordinate.x <= waypoints[this.waypoint + 1].x + 0.5){
                     this.changeDirection(waypoints[this.waypoint + 1].direction);
                     if (this.waypoint != 15) {
                         this.waypoint += 1;
@@ -2161,7 +2344,7 @@ class GoldEnemy extends Enemy {
                 }
                 break;
             case "right":
-                if (this.coordinate.x >= waypoints[this.waypoint + 1].x){
+                if (this.coordinate.x >= waypoints[this.waypoint + 1].x - 0.5){
                     this.changeDirection(waypoints[this.waypoint + 1].direction);
                     if (this.waypoint != 15) {
                         this.waypoint += 1;
@@ -2210,7 +2393,7 @@ class GoldEnemy extends Enemy {
 
 //////////////// START ROUNDS ////////////////
 
-var currentRound = 0;
+var currentRound = 3;
 
 var rounds = [
     round1 = {
@@ -2328,7 +2511,7 @@ var rounds = [
         p: 10,
         baseHealth: 1000,
         baseMoney: 100,
-        baseSpeed: 1.25,
+        baseSpeed: 1.5,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
         }
@@ -2346,7 +2529,6 @@ function checkWaveComplete() {
             deadEnemies.push("dead");
         }
     }
-    console.warn(deadEnemies.length);
     if (lastEnemyCreated) {
         if (deadEnemies.length == enemyArray.length) {
             return true;
@@ -2488,6 +2670,18 @@ function createRound(round){
     var money = round.baseMoney;
     var speed = round.baseSpeed;
     var totalEnemies = round.count();
+
+    // Sets UI view to display round and number of enemies in current round
+    var roundNumber = document.getElementById('roundNumber');
+    roundNumber.innerText = currentRound + 1;
+    var greenNumber = document.getElementById('greenNumber');
+    var purpleNumber = document.getElementById('purpleNumber');
+    var blueNumber = document.getElementById('blueNumber');
+    var goldNumber = document.getElementById('goldNumber');
+    greenNumber.innerText = greens;
+    purpleNumber.innerText = purples;
+    blueNumber.innerText = blues;
+    goldNumber.innerText = yellows;
 
     for (var i = 0; i < yellows; i++) {
         enemyArrayMap.push("yellow");
