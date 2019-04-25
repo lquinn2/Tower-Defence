@@ -126,6 +126,8 @@ var blueY = "8px";
 var goldX = "120px";
 var goldY = "88px";
 
+var selectedTowerId;
+
 function setCurrentlySelected(element){
     if (somethingIsSelected == false){
         currentlySelected = element;
@@ -142,12 +144,36 @@ function clickDown(e){
     somethingIsSelected = true;
     document.onmouseup = clickUp;
     document.onmousemove = drag;
+    mouseX = event.clientX;
+    mouseY = event.clientY;
+    console.log(mouseX);
+    console.log(mouseY);
+    selectedTowerId = e.target.id;
 }
 
 function drag(e){
     e = e || window.event;
-    currentlySelected.style.top = e.clientY - 135 + "px";
-    currentlySelected.style.left = e.clientX - 1335 + "px";
+    // currentlySelected.style.top = e.clientY - 135 + "px";
+    // currentlySelected.style.left = e.clientX - 1335 + "px";
+    switch(selectedTowerId) {
+        case "greenTower":
+            currentlySelected.style.top = e.clientY - mouseY + 5 + "px";
+            currentlySelected.style.left = e.clientX - mouseX + 43 + "px";
+            break;
+        case "purpleTower":
+            currentlySelected.style.top = e.clientY - mouseY + 85 + "px";
+            currentlySelected.style.left = e.clientX - mouseX + 43 + "px";
+            break;
+        case "blueTower":
+            currentlySelected.style.top = e.clientY - mouseY + 5 + "px";
+            currentlySelected.style.left = e.clientX - mouseX + 113 + "px";
+            break;
+        case "goldTower":
+            currentlySelected.style.top = e.clientY - mouseY + 85 + "px";
+            currentlySelected.style.left = e.clientX - mouseX + 115 + "px";
+            break;
+    }
+
     // console.log("X - " + e.clientX);
     // console.log("Y - " + e.clientY);
     shadeCellUnderCursor(e);
@@ -160,7 +186,8 @@ function clickUp(){
     document.onmouseup = null;
     document.onmousemove = null;
     setUITowerPositions();
-    placeTowerUnderCursor();    
+    placeTowerUnderCursor();
+    selectedTowerId = null;    
 }
 
 draggable(uiGreenTower);
@@ -1688,6 +1715,7 @@ class GreenEnemy extends Enemy {
         thisEnemy.setAttribute("style", "display: none;");
         document.body.appendChild(thisEnemy);
         this.img = document.getElementById(id);
+        this.initalHealth = (this.health * 0.8333);
     }
 
     create(){
@@ -1717,6 +1745,13 @@ class GreenEnemy extends Enemy {
                 ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y);
                 ctx3.stroke();
                 ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 2 + 1 * ((37.5/(1/this.health)) / this.initalHealth), this.coordinate.y);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "down":
                 ctx3.save();
@@ -1733,6 +1768,13 @@ class GreenEnemy extends Enemy {
                 ctx3.lineTo(this.coordinate.x - this.coordinate.x + 39, this.coordinate.y - this.coordinate.y + 5);
                 ctx3.stroke();
                 ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x - this.coordinate.x + 39, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x - this.coordinate.x + 37 + 1 * -((34.5/(1/this.health)) / this.initalHealth), this.coordinate.y - this.coordinate.y + 5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "left":
                 ctx3.save();
@@ -1742,10 +1784,17 @@ class GreenEnemy extends Enemy {
 
                 // Draw health bar
                 ctx3.beginPath();
-                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3.5);
+                ctx3.moveTo(this.coordinate.x + 4, this.coordinate.y + 3.5);
                 ctx3.lineWidth = 3;
                 ctx3.strokeStyle = "red";
-                ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3.5);
+                ctx3.lineTo(this.coordinate.x + 48, this.coordinate.y + 3.5);
+                ctx3.stroke();
+                ctx3.closePath();
+                // Draw Health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 4, this.coordinate.y + 3.5);                
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 4 + 1 * ((38.5/(1/this.health)) / this.initalHealth), this.coordinate.y + 3.5);
                 ctx3.stroke();
                 ctx3.closePath();
                 break;
@@ -1761,6 +1810,13 @@ class GreenEnemy extends Enemy {
                 ctx3.lineWidth = 3;
                 ctx3.strokeStyle = "red";
                 ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3.5);
+                ctx3.stroke();
+                ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3.5);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 1 * ((38.5/(1/this.health)) / this.initalHealth), this.coordinate.y + 3.5);
                 ctx3.stroke();
                 ctx3.closePath();
                 break;
@@ -1865,6 +1921,8 @@ class PurpleEnemy extends Enemy {
         this.direction = "down";
         this.speed = speed * 0.7;
         this.img = document.getElementById("purpleEnemy");
+        this.initalHealth = (this.health * 0.571);
+
     }
 
     create(){
@@ -1893,6 +1951,13 @@ class PurpleEnemy extends Enemy {
                 ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y);
                 ctx3.stroke();
                 ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 3 + 1 * ((25/(1/this.health)) / this.initalHealth), this.coordinate.y);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "down":
                 ctx3.save();
@@ -1907,6 +1972,13 @@ class PurpleEnemy extends Enemy {
                 ctx3.lineWidth = 3;
                 ctx3.strokeStyle = "red";
                 ctx3.lineTo(this.coordinate.x - this.coordinate.x + 39, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.stroke();
+                ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x - this.coordinate.x + 38.5, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x - this.coordinate.x + 38.5 + 1 * -((24.5/(1/this.health)) / this.initalHealth), this.coordinate.y - this.coordinate.y + 5);
                 ctx3.stroke();
                 ctx3.closePath();
                 break;
@@ -1924,6 +1996,13 @@ class PurpleEnemy extends Enemy {
                 ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3);
                 ctx3.stroke();
                 ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 1 + 1 * ((24.5/(1/this.health)) / this.initalHealth), this.coordinate.y + 3);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "right":
                 ctx3.save();
@@ -1938,7 +2017,14 @@ class PurpleEnemy extends Enemy {
                 ctx3.strokeStyle = "red";
                 ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3);
                 ctx3.stroke();
-                ctx3.closePath();               
+                ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 2 + 1 * ((24.5/(1/this.health)) / this.initalHealth), this.coordinate.y + 3);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
         }
     }
@@ -2039,6 +2125,8 @@ class BlueEnemy extends Enemy {
         this.direction = "down";
         this.speed = speed * 1;
         this.img = document.getElementById("blueEnemy");
+        this.initalHealth = (this.health * 0.4);
+
     }
 
     create(){
@@ -2052,13 +2140,13 @@ class BlueEnemy extends Enemy {
     }
 
     draw(){
+        console.log(this.initalHealth);
         switch(this.direction){
             case "up":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);                
                 drawRotated(270, this.img, this.coordinate.x, this.coordinate.y, "up", "blue");
                 ctx3.restore();
-
                 
                 // Draw health bar
                 ctx3.beginPath();
@@ -2066,6 +2154,13 @@ class BlueEnemy extends Enemy {
                 ctx3.lineWidth = 3;
                 ctx3.strokeStyle = "red";
                 ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y - 3.5);
+                ctx3.stroke();
+                ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y - 3.5);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 3 + 1 * ((17.5/(1/this.health)) / this.initalHealth), this.coordinate.y - 3.5);
                 ctx3.stroke();
                 ctx3.closePath();
                 break;
@@ -2084,6 +2179,13 @@ class BlueEnemy extends Enemy {
                 ctx3.lineTo(this.coordinate.x - this.coordinate.x - 11.5, this.coordinate.y - this.coordinate.y + 5);
                 ctx3.stroke();
                 ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x - this.coordinate.x + 32, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x - this.coordinate.x + 33 + 1 * -((18/(1/this.health)) / this.initalHealth), this.coordinate.y - this.coordinate.y + 5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "left":
                 ctx3.save();
@@ -2099,10 +2201,17 @@ class BlueEnemy extends Enemy {
                 ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y + 7);
                 ctx3.stroke();
                 ctx3.closePath();
+                // Draw Health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y + 7);                
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 3 + 1 * ((18/(1/this.health)) / this.initalHealth), this.coordinate.y + 7);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "right":
                 ctx3.save();
-                ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
+                ctx3.clearRect(this.coordinate.x - 2, this.coordinate.y - 5, 55, 55);
                 ctx3.drawImage(this.img, this.coordinate.x, this.coordinate.y + 14);
                 ctx3.restore();
                 
@@ -2112,6 +2221,13 @@ class BlueEnemy extends Enemy {
                 ctx3.lineWidth = 3;
                 ctx3.strokeStyle = "red";
                 ctx3.lineTo(this.coordinate.x + 44.5, this.coordinate.y + 7);
+                ctx3.stroke();
+                ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 7);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 1 * ((18/(1/this.health)) / this.initalHealth), this.coordinate.y + 7);
                 ctx3.stroke();
                 ctx3.closePath();
                 break;
@@ -2216,6 +2332,7 @@ class GoldEnemy extends Enemy {
         this.direction = "down";
         this.speed = speed * 2.1;
         this.img = document.getElementById("goldEnemy");
+        this.initalHealth = (this.health * 0.29);
     }
 
     create(){
@@ -2229,13 +2346,13 @@ class GoldEnemy extends Enemy {
     }
 
     draw(){
+        console.log(this.initalHealth);
         switch(this.direction){
             case "up":
                 ctx3.save();
                 ctx3.clearRect(this.coordinate.x - 5, this.coordinate.y - 5, 55, 55);
                 drawRotated(270, this.img, this.coordinate.x, this.coordinate.y, "up", "gold");
                 ctx3.restore();
-
                 
                 // Draw health bar
                 ctx3.beginPath();
@@ -2243,6 +2360,13 @@ class GoldEnemy extends Enemy {
                 ctx3.lineWidth = 3;
                 ctx3.strokeStyle = "red";
                 ctx3.lineTo(this.coordinate.x + 46.5, this.coordinate.y);
+                ctx3.stroke();
+                ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x + 3, this.coordinate.y);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 3 + 1 * ((12.5/(1/this.health)) / this.initalHealth), this.coordinate.y);
                 ctx3.stroke();
                 ctx3.closePath();
                 break;
@@ -2261,6 +2385,13 @@ class GoldEnemy extends Enemy {
                 ctx3.lineTo(this.coordinate.x - this.coordinate.x + 39, this.coordinate.y - this.coordinate.y + 5);
                 ctx3.stroke();
                 ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x - this.coordinate.x + 39, this.coordinate.y - this.coordinate.y + 5);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x - this.coordinate.x + 39 + 1 * -((12.5/(1/this.health)) / this.initalHealth), this.coordinate.y - this.coordinate.y + 5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
             case "left":
                 ctx3.save();
@@ -2274,6 +2405,13 @@ class GoldEnemy extends Enemy {
                 ctx3.lineWidth = 3;
                 ctx3.strokeStyle = "red";
                 ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 4.5);
+                ctx3.stroke();
+                ctx3.closePath();
+                // Draw Health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 4.5);                
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 1 * ((12.5/(1/this.health)) / this.initalHealth), this.coordinate.y + 4.5);
                 ctx3.stroke();
                 ctx3.closePath();
                 break;
@@ -2290,7 +2428,14 @@ class GoldEnemy extends Enemy {
                 ctx3.strokeStyle = "red";
                 ctx3.lineTo(this.coordinate.x + 44, this.coordinate.y + 3.5);
                 ctx3.stroke();
-                ctx3.closePath(); 
+                ctx3.closePath();
+                // Draw health
+                ctx3.beginPath();
+                ctx3.moveTo(this.coordinate.x, this.coordinate.y + 3.5);
+                ctx3.strokeStyle = "green";
+                ctx3.lineTo(this.coordinate.x + 1 * ((12.5/(1/this.health)) / this.initalHealth), this.coordinate.y + 3.5);
+                ctx3.stroke();
+                ctx3.closePath();
                 break;
         }
     }
@@ -2393,7 +2538,7 @@ class GoldEnemy extends Enemy {
 
 //////////////// START ROUNDS ////////////////
 
-var currentRound = 3;
+var currentRound = 0;
 
 var rounds = [
     round1 = {
