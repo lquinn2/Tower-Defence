@@ -109,6 +109,19 @@ setUITowerPositions();
 // uiBlueTower.addEventListener("mouseover", shadeBackground);
 // uiGoldTower.addEventListener("mouseover", shadeBackground);
 
+
+//////////////// START PRICES AND LIVES ////////////////
+
+var money = 250;
+var lives = 25;
+var moneyNumber = document.getElementById('moneyNumber');
+var livesNumber = document.getElementById('livesNumber');
+moneyNumber.innerText = money;
+livesNumber.innerText = lives;
+
+//////////////// END PRICES AND LIVES ///////////////
+
+
 //////////////// START DRAG AND DROP ////////////////
 
 {
@@ -127,6 +140,9 @@ var goldX = "120px";
 var goldY = "88px";
 
 var selectedTowerId;
+var fullScreenWidth = document.body.clientWidth;
+var currentScreenWidth;
+
 
 function setCurrentlySelected(element){
     if (somethingIsSelected == false){
@@ -149,6 +165,9 @@ function clickDown(e){
     console.log(mouseX);
     console.log(mouseY);
     selectedTowerId = e.target.id;
+    currentScreenWidth = document.body.clientWidth;
+    console.warn("FULL Window width: " + fullScreenWidth);
+    console.warn("CURRENT Window width: " + currentScreenWidth);
 }
 
 function drag(e){
@@ -217,11 +236,12 @@ for (var i = 0; i < (horizontalSquareCount * verticalSquareCount); i++) {
 function shadeCellUnderCursor(e){
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    console.error((fullScreenWidth - currentScreenWidth));
     var closestCell;
     var cellChanged = false;
     for (var i = 0; i < gridArray.length; i++) {
         cell = gridArray[i];
-        if ((e.clientX - 60 > cell.x && e.clientX - 60 < (cell.x + 50)) && (e.clientY - 35 > cell.y && e.clientY - 35 < (cell.y + 50))) {
+        if ((e.clientX + ((fullScreenWidth - currentScreenWidth) / 2) - 60 > cell.x && e.clientX + ((fullScreenWidth - currentScreenWidth) / 2) - 60 < (cell.x + 50)) && (e.clientY - 35 > cell.y && e.clientY - 35 < (cell.y + 50))) {
             if (closestCell != cell) {
                 closestCell = cell;
                 cellChanged = true;
@@ -252,7 +272,7 @@ function placeTowerUnderCursor(){
                 var closestCell;
                 for (var i = 0; i < gridArray.length; i++) {
                     cell = gridArray[i];
-                    if ((e.clientX - 60 > cell.x && e.clientX - 60 < (cell.x + 50)) && (e.clientY - 35 > cell.y && e.clientY - 35 < (cell.y + 50))) {
+                    if ((e.clientX + ((fullScreenWidth - currentScreenWidth) / 2) - 60 > cell.x && e.clientX + ((fullScreenWidth - currentScreenWidth) / 2) - 60 < (cell.x + 50)) && (e.clientY - 35 > cell.y && e.clientY - 35 < (cell.y + 50))) {
                         if (closestCell != cell) {
                             closestCell = cell;
                         }
@@ -1901,6 +1921,7 @@ class GreenEnemy extends Enemy {
 
     checkHealth(){
         if (this.health <= 0) {
+            money += this.money;
             return false;
         } else {
             return true;
@@ -2107,6 +2128,7 @@ class PurpleEnemy extends Enemy {
 
     checkHealth(){
         if (this.health <= 0) {
+            money += this.money;
             return false;
         } else {
             return true;
@@ -2312,6 +2334,7 @@ class BlueEnemy extends Enemy {
 
     checkHealth(){
         if (this.health <= 0) {
+            money += this.money;
             return false;
         } else {
             return true;
@@ -2515,8 +2538,10 @@ class GoldEnemy extends Enemy {
                 break;
         }
     }
+
     checkHealth(){
         if (this.health <= 0) {
+            money += this.money;
             return false;
         } else {
             return true;
@@ -2546,8 +2571,8 @@ var rounds = [
         b: 0,
         g: 10,
         p: 0,
-        baseHealth: 120,
-        baseMoney: 50,
+        baseHealth: 175,
+        baseMoney: 20,
         baseSpeed: 1,
         count: function() {
             return (this.g + this.p + this.b + this.y);
@@ -2558,8 +2583,8 @@ var rounds = [
         b: 0,
         g: 0,
         p: 10,
-        baseHealth: 175,
-        baseMoney: 55,
+        baseHealth: 250,
+        baseMoney: 30,
         baseSpeed: 1,
         count: function() {
             return (this.g + this.p + this.b + this.y);
@@ -2570,8 +2595,8 @@ var rounds = [
         b: 10,
         g: 0,
         p: 0,
-        baseHealth: 250,
-        baseMoney: 60,
+        baseHealth: 300,
+        baseMoney: 40,
         baseSpeed: 1,
         count: function() {
             return (this.g + this.p + this.b + this.y);
@@ -2582,8 +2607,8 @@ var rounds = [
         b: 0,
         g: 0,
         p: 0,
-        baseHealth: 350,
-        baseMoney: 65,
+        baseHealth: 400,
+        baseMoney: 50,
         baseSpeed: 1,
         count: function() {
             return (this.g + this.p + this.b + this.y);            
@@ -2594,8 +2619,8 @@ var rounds = [
         b: 0,
         g: 10,
         p: 0,
-        baseHealth: 400,
-        baseMoney: 70,
+        baseHealth: 500,
+        baseMoney: 60,
         baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
@@ -2606,8 +2631,8 @@ var rounds = [
         b: 7,
         g: 0,
         p: 7,
-        baseHealth: 500,
-        baseMoney: 75,
+        baseHealth: 600,
+        baseMoney: 70,
         baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
@@ -2618,7 +2643,7 @@ var rounds = [
         b: 4,
         g: 4,
         p: 4,
-        baseHealth: 550,
+        baseHealth: 700,
         baseMoney: 80,
         baseSpeed: 1.25,
         count: function() {
@@ -2630,7 +2655,7 @@ var rounds = [
         b: 0,
         g: 10,
         p: 0,
-        baseHealth: 700,
+        baseHealth: 850,
         baseMoney: 85,
         baseSpeed: 1.25,
         count: function() {
@@ -2642,7 +2667,7 @@ var rounds = [
         b: 12,
         g: 0,
         p: 12,
-        baseHealth: 750,
+        baseHealth: 900,
         baseMoney: 90,
         baseSpeed: 1.25,
         count: function() {
@@ -2654,7 +2679,7 @@ var rounds = [
         b: 10,
         g: 10,
         p: 10,
-        baseHealth: 1000,
+        baseHealth: 1200,
         baseMoney: 100,
         baseSpeed: 1.5,
         count: function() {
@@ -2749,6 +2774,10 @@ function startWave(){
             // Clear canvas board to remove any anomalies
             ctx4.clearRect(0, 0, canvas.width, canvas.height);
             ctx3.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update game values
+            moneyNumber.innerText = money;
+            livesNumber.innerText = lives;
 
             //console.log(enemyArray);
             for (var i = 0; i < towerArray.length; i++) {

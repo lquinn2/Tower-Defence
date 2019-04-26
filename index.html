@@ -16,6 +16,13 @@
             z-index: 1;
         }
 
+        div, p {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
         .animate {
             -webkit-transition: all 0.8s ease-in-out;
             -moz-transition: all 0.8s ease-in-out;
@@ -123,17 +130,23 @@
         }
         #greenCaption {
             color: green;
-            left: -1px;
+            top: 55px;
+            left: 55px;
         }
         #purpleCaption {
             color: purple;
-            left: -4px;
+            top: 125px;
+            left: 55px;
         }
         #blueCaption {
             color: blue;
+            top: 32.5px;
+            left: 125px;
         }
         #goldCaption {
             color: gold;
+            top: 102.5px;
+            left: 125px;
         }
         #descriptionHolder {
             visibility: hidden;
@@ -278,6 +291,7 @@
             float: right;
             font-weight: bold;
             margin-right: 10px;
+            text-shadow: 2px 2px black;
         }
         .flexbox {
             display: flex;
@@ -317,17 +331,17 @@
                     </div>
                     <div class="holderContent">
                         <div id="greenTower" onmouseover="setCurrentlySelected(this)">
-                            <!--<div class="towerCaption" id="greenCaption">Green Tower</div>-->
                         </div> 
+                        <div class="towerCaption" id="greenCaption">$150</div>
                         <div id="purpleTower" onmouseover="setCurrentlySelected(this)">
-                            <!--<div class="towerCaption" id="purpleCaption">Purple Tower</div>-->
                         </div> 
+                        <div class="towerCaption" id="purpleCaption">$200</div>
                         <div id="blueTower" onmouseover="setCurrentlySelected(this)">
-                            <!--<div class="towerCaption" id="blueCaption">Blue Tower</div>-->
                         </div> 
+                        <div class="towerCaption" id="blueCaption">$200</div>
                         <div id="goldTower" onmouseover="setCurrentlySelected(this)">
-                            <!--<div class="towerCaption" id="goldCaption">Gold Tower</div>-->
                         </div> 
+                        <div class="towerCaption" id="goldCaption">$250</div>
                     </div>
                 </div>
                 <div id="descriptionHolder" class="animate-quick">
@@ -341,10 +355,10 @@
                     <div id="sell">Sell</div>
                 </div>
                 <div id="gameUI" class="animate">
-                    <div id="money" class="animate"><div class="gameLabels">MONEY</div> <div class="gameNumbers" id="moneyNumber">250</div></div>
-                    <div id="lives" class="animate"><div class="gameLabels">LIVES</div> <div class="gameNumbers" id="livesNumber">50</div></div>
+                    <div id="money" class="animate"><div class="gameLabels">MONEY</div> <div class="gameNumbers" id="moneyNumber" style="float: right;">nil</div><div class="gameNumbers" style="margin-right: 2px; font-weight: 600;">$</div></div>
+                    <div id="lives" class="animate"><div class="gameLabels">LIVES</div> <div class="gameNumbers" id="livesNumber">nil</div></div>
                     <div id="play" class="animate">Play</div>
-                    <div id="round" class="animate"><div class="gameLabels">ROUND</div> <div class="gameNumbers" id="roundNumber">1</div></div>
+                    <div id="round" class="animate"><div class="gameLabels">ROUND</div> <div class="gameNumbers" id="roundNumber" style="text-shadow: 2px 2px dodgerblue">1</div></div>
                     <div id="enemiesInRound" class="flexbox">
                         <div class="flex-item" style="color: green">GREENS
                             <p id="greenNumber">nil</p>
