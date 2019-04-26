@@ -434,24 +434,32 @@ function placeTowerUnderCursor(){
                 if (validCell) {
                     switch(currentlySelected.id) {
                         case "greenTower":
-                            var greenTower = new GreenTower(1);
-                            greenTower.draw(closestCell.x, closestCell.y);
-                            console.info("Tower placed: greenTower");
+                            if (money >= 150) {                                
+                                var greenTower = new GreenTower(1);
+                                greenTower.draw(closestCell.x, closestCell.y);
+                                console.info("Tower placed: greenTower");
+                            }
                             return true;
                         case "purpleTower":
-                            var purpleTower = new PurpleTower(1);
-                            purpleTower.draw(closestCell.x, closestCell.y);
-                            console.info("Tower placed: purpleTower");
+                            if (money >= 200) {
+                                var purpleTower = new PurpleTower(1);
+                                purpleTower.draw(closestCell.x, closestCell.y);
+                                console.info("Tower placed: purpleTower");
+                            }
                             return true;
                         case "blueTower":
-                            var blueTower = new BlueTower(1);
-                            blueTower.draw(closestCell.x, closestCell.y);
-                            console.info("Tower placed: blueTower");
+                            if (money >= 200) {
+                                var blueTower = new BlueTower(1);
+                                blueTower.draw(closestCell.x, closestCell.y);
+                                console.info("Tower placed: blueTower");
+                            }
                             return true;
                         case "goldTower":
-                            var goldTower = new GoldTower(1);
-                            goldTower.draw(closestCell.x, closestCell.y);
-                            console.info("Tower placed: goldTower");
+                            if (money >= 250) {
+                                var goldTower = new GoldTower(1);
+                                goldTower.draw(closestCell.x, closestCell.y);
+                                console.info("Tower placed: goldTower");
+                            }
                             return true;
                     }
                 } else {
@@ -2997,7 +3005,67 @@ var rounds = [
         count: function() {
             return (this.g + this.p + this.b + this.y); 
         }
-    }
+    },
+    round11 = {
+        y: 0,
+        b: 0,
+        g: 40,
+        p: 0,
+        baseHealth: 4000,
+        baseMoney: 40,
+        baseSpeed: 1.5,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round12 = {
+        y: 25,
+        b: 0,
+        g: 0,
+        p: 0,
+        baseHealth: 2000,
+        baseMoney: 50,
+        baseSpeed: 2.25,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round13 = {
+        y: 0,
+        b: 35,
+        g: 0,
+        p: 10,
+        baseHealth: 3200,
+        baseMoney: 60,
+        baseSpeed: 1.5,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round14 = {
+        y: 20,
+        b: 20,
+        g: 20,
+        p: 0,
+        baseHealth: 3750,
+        baseMoney: 70,
+        baseSpeed: 1.5,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round15 = {
+        y: 0,
+        b: 0,
+        g: 0,
+        p: 50,
+        baseHealth: 5500,
+        baseMoney: 75,
+        baseSpeed: 0.75,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
 ];
 
 var deadEnemies = [];
