@@ -657,7 +657,7 @@ class GreenTower extends Tower {
                 // ctx.closePath();
                 break;
             case 4:
-                this.damage = 5;
+                this.damage = 5.75;
                 this.range = 200;
                 this.value = 1500;
                 this.name = "Green Tower level " + this.level;
@@ -872,7 +872,7 @@ class PurpleTower extends Tower {
         this.x = 0;
         this.y = 0;
         this.range = 175;
-        this.damage = 1;
+        this.damage = 0.9;
         this.price = 200;
         this.upgradeCost = 500;
     }
@@ -987,6 +987,7 @@ class PurpleTower extends Tower {
                 // ctx.closePath();
                 break;
             case 2:
+                this.damage = 1.75;
                 this.range = 200; 
                 this.name = "Purple Tower level " + this.level;
                 // // Range Circle
@@ -996,6 +997,7 @@ class PurpleTower extends Tower {
                 // ctx.closePath();
                 break;
             case 3:
+                this.damage = 2.5;
                 this.range = 230;
                 this.name = "Purple Tower level " + this.level;
                 // // Range Circle
@@ -1005,6 +1007,7 @@ class PurpleTower extends Tower {
                 // ctx.closePath();
                 break;
             case 4:
+                this.damage = 4.25;
                 this.range = 275;
                 this.name = "Purple Tower level " + this.level;
                 // // Range Circle
@@ -1176,6 +1179,7 @@ class PurpleTower extends Tower {
             }
         }
     }
+
     drawRange(bool) {
         switch (bool) {
             case true:
@@ -1207,7 +1211,7 @@ class BlueTower extends Tower {
         this.x = 0;
         this.y = 0;
         this.range = 100;
-        this.damage = 1;
+        this.damage = 2;
         this.price = 200;
         this.upgradeCost = 500;
     }
@@ -1280,6 +1284,7 @@ class BlueTower extends Tower {
                 // ctx.closePath();
                 break;
             case 2:
+                this.damage = 4;
                 this.range = 115;
                 this.name = "Blue Tower level " + this.level;
                 // // Range Circle
@@ -1289,6 +1294,7 @@ class BlueTower extends Tower {
                 // ctx.closePath();
                 break;
             case 3:
+                this.damage = 6;
                 this.range = 130;
                 this.name = "Blue Tower level " + this.level;
                 // // Range Circle
@@ -1298,6 +1304,7 @@ class BlueTower extends Tower {
                 // ctx.closePath();
                 break;
             case 4:
+                this.damage = 8;
                 this.range = 150;
                 this.name = "Blue Tower level " + this.level;
                 // // Range Circle
@@ -1565,6 +1572,7 @@ class GoldTower extends Tower {
                 // ctx.closePath();
                 break;
             case 2:
+                this.damage = 2.25;
                 this.range = 160;
                 this.name = "Gold Tower level " + this.level;
                 // // Range Circle
@@ -1574,6 +1582,7 @@ class GoldTower extends Tower {
                 // ctx.closePath();
                 break;
             case 3:
+                this.damage = 4.5;
                 this.range = 180;
                 this.name = "Gold Tower level " + this.level;
                 // // Range Circle
@@ -1583,6 +1592,7 @@ class GoldTower extends Tower {
                 // ctx.closePath();
                 break;
             case 4:
+                this.damage = 7.2;
                 this.range = 215;
                 this.name = "Gold Tower level " + this.level;            
                 // // Range Circle
@@ -2755,7 +2765,7 @@ var rounds = [
         b: 0,
         g: 0,
         p: 10,
-        baseHealth: 300,
+        baseHealth: 225,
         baseMoney: 30,
         baseSpeed: 1,
         count: function() {
@@ -2767,7 +2777,7 @@ var rounds = [
         b: 10,
         g: 0,
         p: 0,
-        baseHealth: 450,
+        baseHealth: 400,
         baseMoney: 40,
         baseSpeed: 1,
         count: function() {
@@ -2779,7 +2789,7 @@ var rounds = [
         b: 0,
         g: 0,
         p: 0,
-        baseHealth: 750,
+        baseHealth: 650,
         baseMoney: 50,
         baseSpeed: 1,
         count: function() {
@@ -2791,7 +2801,7 @@ var rounds = [
         b: 0,
         g: 10,
         p: 0,
-        baseHealth: 900,
+        baseHealth: 800,
         baseMoney: 60,
         baseSpeed: 1.25,
         count: function() {
