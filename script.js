@@ -987,7 +987,7 @@ class PurpleTower extends Tower {
                 // ctx.closePath();
                 break;
             case 2:
-                this.damage = 1.75;
+                this.damage = 1.8;
                 this.range = 200; 
                 this.name = "Purple Tower level " + this.level;
                 // // Range Circle
@@ -997,7 +997,7 @@ class PurpleTower extends Tower {
                 // ctx.closePath();
                 break;
             case 3:
-                this.damage = 2.5;
+                this.damage = 2.75;
                 this.range = 230;
                 this.name = "Purple Tower level " + this.level;
                 // // Range Circle
@@ -1007,7 +1007,7 @@ class PurpleTower extends Tower {
                 // ctx.closePath();
                 break;
             case 4:
-                this.damage = 4.25;
+                this.damage = 4.75;
                 this.range = 275;
                 this.name = "Purple Tower level " + this.level;
                 // // Range Circle
@@ -2886,6 +2886,21 @@ function checkWaveComplete() {
             return true;
         }
     }
+
+    for (var i = 0; i < enemyArray.length; i++) {
+        var enemy = enemyArray[i];
+        if (enemy) {
+            if (enemy.coordinate.x > 1240) {
+                lives -= 1;
+                livesNumber.innerText = lives;
+                enemy.health = 0;
+                enemy.checkHealth();
+                // Subract money earned because enemy self destructed after crossing finish line
+                money -= enemy.money;
+                console.warn("Enemy crossed finish line");
+            }
+        }
+    }
 }
 
 //////////////// END ROUNDS ////////////////
@@ -2945,11 +2960,13 @@ function startWave(){
                     roundCreated = false;
                     currentRound++;
                 }
-                setTimeout(stopRound, 1);
+                setTimeout(stopRound, 5);
             }
         }
     }
 }
+
+
 playButton.addEventListener('click', play);
 
 var waveStarted = false;
