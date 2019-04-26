@@ -635,7 +635,7 @@ class GreenTower extends Tower {
                 // ctx.closePath();
                 break;
             case 2:
-                this.damage = 1.5;
+                this.damage = 2;
                 this.range = 150;
                 this.value = 300;
                 this.name = "Green Tower level " + this.level;
@@ -646,7 +646,7 @@ class GreenTower extends Tower {
                 // ctx.closePath();
                 break;
             case 3:
-                this.damage = 2;
+                this.damage = 3.5;
                 this.range = 175;
                 this.value = 800;
                 this.name = "Green Tower level " + this.level;
@@ -657,7 +657,7 @@ class GreenTower extends Tower {
                 // ctx.closePath();
                 break;
             case 4:
-                this.damage = 2.75;
+                this.damage = 5;
                 this.range = 200;
                 this.value = 1500;
                 this.name = "Green Tower level " + this.level;
@@ -682,8 +682,6 @@ class GreenTower extends Tower {
                     if (!targetedEnemy) {
                         targetedEnemy = enemyArray[i];
                         this.fire(enemyArray[i].coordinate.x, enemyArray[i].coordinate.y);
-                        enemyArray[i].health = enemyArray[i].health - this.damage;
-                        //console.info("Enemy Health: " + enemyArray[i].health);
                     }
                     // Switches to next enemy if targeted enemy dies
                     if (targetedEnemy) {
@@ -704,6 +702,27 @@ class GreenTower extends Tower {
         ctx4.strokeStyle = "lime";
         ctx4.stroke();
         ctx4.closePath();
+        for (var i = 0; i < enemyArray.length; i++) {
+            var enemy = enemyArray[i];
+            if (enemy) {
+                if ((x >= enemy.coordinate.x && x <= enemy.coordinate.x + 40) && (y >= enemy.coordinate.y && y <= enemy.coordinate.y + 40)) {
+                    switch (enemy.color) {
+                        case "green":
+                            enemy.health = enemy.health - (this.damage * 1.5);
+                            break;
+                        case "purple":
+                            enemy.health = enemy.health - (this.damage * 0.75);
+                            break;
+                        case "blue":
+                            enemy.health = enemy.health - this.damage;
+                            break;
+                        case "gold":
+                            enemy.health = enemy.health - this.damage;
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     levelUp() {
@@ -1009,8 +1028,6 @@ class PurpleTower extends Tower {
                     if (!targetedEnemy) {
                         targetedEnemy = enemyArray[i];
                         this.fire(enemyArray[i].coordinate.x, enemyArray[i].coordinate.y);
-                        enemyArray[i].health = enemyArray[i].health - this.damage;
-                        // console.info("Enemy Health: " + enemyArray[i].health);
                     }
                     // Switches to next enemy if targeted enemy dies
                     if (targetedEnemy) {
@@ -1031,6 +1048,27 @@ class PurpleTower extends Tower {
         ctx4.strokeStyle = "rgb(255, 13, 255)";
         ctx4.stroke();
         ctx4.closePath();
+        for (var i = 0; i < enemyArray.length; i++) {
+            var enemy = enemyArray[i];
+            if (enemy) {
+                if ((x >= enemy.coordinate.x && x <= enemy.coordinate.x + 40) && (y >= enemy.coordinate.y && y <= enemy.coordinate.y + 40)) {
+                    switch (enemy.color) {
+                        case "green":
+                            enemy.health = enemy.health - (this.damage * 0.7);
+                            break;
+                        case "purple":
+                            enemy.health = enemy.health - (this.damage * 1.75);
+                            break;
+                        case "blue":
+                            enemy.health = enemy.health - this.damage;
+                            break;
+                        case "gold":
+                            enemy.health = enemy.health - this.damage;
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     levelUp() {
@@ -1283,8 +1321,6 @@ class BlueTower extends Tower {
                     if (!targetedEnemy) {
                         targetedEnemy = enemyArray[i];
                         this.fire(enemyArray[i].coordinate.x, enemyArray[i].coordinate.y);
-                        enemyArray[i].health = enemyArray[i].health - this.damage;
-                        //console.info("Enemy Health: " + enemyArray[i].health);
                     }
                     // Switches to next enemy if targeted enemy dies
                     if (targetedEnemy) {
@@ -1305,6 +1341,27 @@ class BlueTower extends Tower {
         ctx4.strokeStyle = "rgb(0, 190, 255)";
         ctx4.stroke();
         ctx4.closePath();
+        for (var i = 0; i < enemyArray.length; i++) {
+            var enemy = enemyArray[i];
+            if (enemy) {
+                if ((x >= enemy.coordinate.x && x <= enemy.coordinate.x + 40) && (y >= enemy.coordinate.y && y <= enemy.coordinate.y + 40)) {
+                    switch (enemy.color) {
+                        case "green":
+                            enemy.health = enemy.health - this.damage;
+                            break;
+                        case "purple":
+                            enemy.health = enemy.health - this.damage;
+                            break;
+                        case "blue":
+                            enemy.health = enemy.health - (this.damage * 1.75);
+                            break;
+                        case "gold":
+                            enemy.health = enemy.health - (this.damage * 0.7);
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     levelUp() {
@@ -1549,8 +1606,6 @@ class GoldTower extends Tower {
                     if (!targetedEnemy) {
                         targetedEnemy = enemyArray[i];
                         this.fire(enemyArray[i].coordinate.x, enemyArray[i].coordinate.y);
-                        enemyArray[i].health = enemyArray[i].health - this.damage;
-                        //console.info("Enemy Health: " + enemyArray[i].health);
                     }
                     // Switches to next enemy if targeted enemy dies
                     if (targetedEnemy) {
@@ -1571,6 +1626,27 @@ class GoldTower extends Tower {
         ctx4.strokeStyle = "gold";
         ctx4.stroke();
         ctx4.closePath();
+        for (var i = 0; i < enemyArray.length; i++) {
+            var enemy = enemyArray[i];
+            if (enemy) {
+                if ((x >= enemy.coordinate.x && x <= enemy.coordinate.x + 40) && (y >= enemy.coordinate.y && y <= enemy.coordinate.y + 40)) {
+                    switch (enemy.color) {
+                        case "green":
+                            enemy.health = enemy.health - this.damage;
+                            break;
+                        case "purple":
+                            enemy.health = enemy.health - this.damage;
+                            break;
+                        case "blue":
+                            enemy.health = enemy.health - (this.damage * 0.65);
+                            break;
+                        case "gold":
+                            enemy.health = enemy.health - (this.damage * 2);
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     levelUp() {
@@ -1815,10 +1891,11 @@ class Enemy {
 class GreenEnemy extends Enemy {
     constructor(health, money, id, speed){
         super(health, money);
+        this.color = "green";
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
-        this.speed =  speed * 1.2;
+        this.speed =  speed * 1.1;
         var thisEnemy = document.createElement("IMG");
         thisEnemy.setAttribute("src", "Graphics/45w/Green Enemy.png");
         thisEnemy.setAttribute("id", id);
@@ -2029,6 +2106,7 @@ class GreenEnemy extends Enemy {
 class PurpleEnemy extends Enemy {
     constructor(health, money, speed){
         super(health * 2, money);
+        this.color = "purple";
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
@@ -2234,10 +2312,11 @@ class PurpleEnemy extends Enemy {
 class BlueEnemy extends Enemy {
     constructor(health, money, speed){
         super(health * 0.9, money);
+        this.color = "blue";
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
-        this.speed = speed * 1;
+        this.speed = speed * 1.3;
         this.img = document.getElementById("blueEnemy");
         this.initalHealth = (this.health * 0.4);
 
@@ -2441,7 +2520,8 @@ class BlueEnemy extends Enemy {
 //-- Gold Enemy --//
 class GoldEnemy extends Enemy {
     constructor(health, money, speed){
-        super(health * 0.65, money);
+        super(health * 0.75, money);
+        this.color = "gold";
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
@@ -2675,7 +2755,7 @@ var rounds = [
         b: 0,
         g: 0,
         p: 10,
-        baseHealth: 250,
+        baseHealth: 300,
         baseMoney: 30,
         baseSpeed: 1,
         count: function() {
@@ -2687,7 +2767,7 @@ var rounds = [
         b: 10,
         g: 0,
         p: 0,
-        baseHealth: 300,
+        baseHealth: 450,
         baseMoney: 40,
         baseSpeed: 1,
         count: function() {
@@ -2699,7 +2779,7 @@ var rounds = [
         b: 0,
         g: 0,
         p: 0,
-        baseHealth: 400,
+        baseHealth: 750,
         baseMoney: 50,
         baseSpeed: 1,
         count: function() {
@@ -2711,7 +2791,7 @@ var rounds = [
         b: 0,
         g: 10,
         p: 0,
-        baseHealth: 500,
+        baseHealth: 900,
         baseMoney: 60,
         baseSpeed: 1.25,
         count: function() {
@@ -2723,8 +2803,8 @@ var rounds = [
         b: 7,
         g: 0,
         p: 7,
-        baseHealth: 600,
-        baseMoney: 70,
+        baseHealth: 1200,
+        baseMoney: 65,
         baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
@@ -2735,8 +2815,8 @@ var rounds = [
         b: 4,
         g: 4,
         p: 4,
-        baseHealth: 700,
-        baseMoney: 80,
+        baseHealth: 1500,
+        baseMoney: 70,
         baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
@@ -2747,8 +2827,8 @@ var rounds = [
         b: 0,
         g: 10,
         p: 0,
-        baseHealth: 850,
-        baseMoney: 85,
+        baseHealth: 2000,
+        baseMoney: 80,
         baseSpeed: 1.25,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
@@ -2759,7 +2839,7 @@ var rounds = [
         b: 12,
         g: 0,
         p: 12,
-        baseHealth: 900,
+        baseHealth: 2500,
         baseMoney: 90,
         baseSpeed: 1.25,
         count: function() {
@@ -2771,7 +2851,7 @@ var rounds = [
         b: 10,
         g: 10,
         p: 10,
-        baseHealth: 1200,
+        baseHealth: 3200,
         baseMoney: 100,
         baseSpeed: 1.5,
         count: function() {
@@ -2800,55 +2880,9 @@ function checkWaveComplete() {
 
 //////////////// END ROUNDS ////////////////
 
-{
+// Set inital out of bounds tower to start of tower array to remove bug
 var greenTower = new GreenTower(1);
 greenTower.draw(-350, -150);
-
-// //var purpleTower = new PurpleTower(1);
-// purpleTower.draw(850, 50);
-
-// //var blueTower = new BlueTower(1);
-// blueTower.draw(550, 100);
-
-// var goldTower = new GoldTower(1);
-// //goldTower.draw(600, 150);
-
-// var greenTower = new GreenTower(2);
-// //greenTower.draw(400, 150);
-
-// var purpleTower = new PurpleTower(2);
-// //purpleTower.draw(900, 50);
-
-// var blueTower = new BlueTower(2);
-// //blueTower.draw(600, 100);
-
-// var goldTower = new GoldTower(2);
-// //goldTower.draw(650, 150);
-
-// var greenTower = new GreenTower(3);
-// //greenTower.draw(450, 150);
-
-// var purpleTower = new PurpleTower(3);
-// //purpleTower.draw(950, 50);
-
-// var blueTower = new BlueTower(3);
-// //blueTower.draw(650, 100);
-
-// var goldTower = new GoldTower(3);
-// //goldTower.draw(700, 150);
-
-// var greenTower2 = new GreenTower(4);
-// greenTower2.draw(850, 150);
-
-// var purpleTower = new PurpleTower(4);
-// //purpleTower.draw(1000, 50);
-
-// var blueTower = new BlueTower(4);
-// //blueTower.draw(700, 100);
-
-// var goldTower = new GoldTower(4);
-// //goldTower.draw(750, 150);
-}
 
 drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
 
