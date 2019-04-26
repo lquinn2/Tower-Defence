@@ -204,37 +204,40 @@ function clickUp(){
     somethingIsSelected = false;
     document.onmouseup = null;
     document.onmousemove = null;
-    console.log(event.target.id);
+    console.log("Attempting placement of: " + event.target.id);
     setUITowerPositions();
-    switch (event.target.id) {
-        case "greenTower":
-            if (money >= 150) {
-                money -= 150;
-                moneyNumber.innerText = money;
-                placeTowerUnderCursor();
-            }
-            break;
-        case "purpleTower":
-            if (money >= 200) {
-                money -= 200;
-                moneyNumber.innerText = money;
-                placeTowerUnderCursor();
-            }
-            break;
-        case "blueTower":
-            if (money >= 200) {
-                money -= 200;
-                moneyNumber.innerText = money;
-                placeTowerUnderCursor();
-            }
-            break;
-        case "goldTower":
-            if (money >= 250) {
-                money -= 200;
-                moneyNumber.innerText = money;
-                placeTowerUnderCursor();
-            }
-            break;
+    var isValidCell = placeTowerUnderCursor();
+    if (isValidCell) {
+        switch (event.target.id) {
+            case "greenTower":
+                if (money >= 150) {
+                    money -= 150;
+                    moneyNumber.innerText = money;
+                    placeTowerUnderCursor();
+                }
+                break;
+            case "purpleTower":
+                if (money >= 200) {
+                    money -= 200;
+                    moneyNumber.innerText = money;
+                    placeTowerUnderCursor();
+                }
+                break;
+            case "blueTower":
+                if (money >= 200) {
+                    money -= 200;
+                    moneyNumber.innerText = money;
+                    placeTowerUnderCursor();
+                }
+                break;
+            case "goldTower":
+                if (money >= 250) {
+                    money -= 200;
+                    moneyNumber.innerText = money;
+                    placeTowerUnderCursor();
+                }
+                break;
+        }
     }
     
     selectedTowerId = null;    
@@ -262,6 +265,106 @@ for (var i = 0; i < (horizontalSquareCount * verticalSquareCount); i++) {
     xHelper++;
 }
 
+// Create array of path squares
+var pathArray = [
+    {x: 150, y: 0},
+    {x: 150, y: 50},
+    {x: 150, y: 100},
+    {x: 150, y: 150},
+    {x: 150, y: 200},
+    {x: 200, y: 200},
+    {x: 250, y: 200},
+    {x: 300, y: 200},
+    {x: 350, y: 200},
+    {x: 350, y: 250},
+    {x: 350, y: 300},
+    {x: 350, y: 350},
+    {x: 300, y: 350},
+    {x: 250, y: 350},
+    {x: 200, y: 350},
+    {x: 150, y: 350},
+    {x: 150, y: 400},
+    {x: 150, y: 450},
+    {x: 150, y: 500},
+    {x: 150, y: 550},
+    {x: 150, y: 600},
+    {x: 150, y: 650},
+    {x: 150, y: 700},
+    {x: 150, y: 750},
+    {x: 200, y: 750},
+    {x: 250, y: 750},
+    {x: 300, y: 750},
+    {x: 350, y: 750},
+    {x: 400, y: 750},
+    {x: 450, y: 750},
+    {x: 500, y: 750},
+    {x: 500, y: 700},
+    {x: 500, y: 650},
+    {x: 500, y: 600},
+    {x: 500, y: 550},
+    {x: 500, y: 500},
+    {x: 500, y: 450},
+    {x: 500, y: 400},
+    {x: 500, y: 350},
+    {x: 500, y: 300},
+    {x: 500, y: 250},
+    {x: 550, y: 250},
+    {x: 600, y: 250},
+    {x: 650, y: 250},
+    {x: 700, y: 250},
+    {x: 750, y: 250},
+    {x: 800, y: 250},
+    {x: 800, y: 200},
+    {x: 800, y: 150},
+    {x: 800, y: 100},
+    {x: 850, y: 100},
+    {x: 900, y: 100},
+    {x: 950, y: 100},
+    {x: 1000, y: 100},
+    {x: 1050, y: 100},
+    {x: 1100, y: 100},
+    {x: 1150, y: 100},
+    {x: 1150, y: 150},
+    {x: 1150, y: 200},
+    {x: 1150, y: 250},
+    {x: 1150, y: 300},
+    {x: 1150, y: 350},
+    {x: 1150, y: 400},
+    {x: 1150, y: 450},
+    {x: 1150, y: 500},
+    {x: 1150, y: 550},
+    {x: 1100, y: 550},
+    {x: 1050, y: 550},
+    {x: 1000, y: 550},
+    {x: 950, y: 550},
+    {x: 950, y: 500},
+    {x: 950, y: 450},
+    {x: 950, y: 400},
+    {x: 900, y: 400},
+    {x: 850, y: 400},
+    {x: 800, y: 400},
+    {x: 750, y: 400},
+    {x: 700, y: 400},
+    {x: 700, y: 450},
+    {x: 700, y: 500},
+    {x: 700, y: 550},
+    {x: 700, y: 600},
+    {x: 700, y: 650},
+    {x: 700, y: 700},
+    {x: 700, y: 750},
+    {x: 750, y: 750},
+    {x: 800, y: 750},
+    {x: 850, y: 750},
+    {x: 900, y: 750},
+    {x: 950, y: 750},
+    {x: 1000, y: 750},
+    {x: 1050, y: 750},
+    {x: 1100, y: 750},
+    {x: 1150, y: 750},
+];
+
+
+
 
 // Grid shade on hover
 function shadeCellUnderCursor(e){
@@ -288,11 +391,13 @@ function shadeCellUnderCursor(e){
     ctx.restore(); 
 }
 
+
 // Place tower on mouse up
 function placeTowerUnderCursor(){
     e = event;
     cursorX = e.clientX;
     cursorY = e.clientY;
+    var validCell = true;
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
@@ -309,23 +414,48 @@ function placeTowerUnderCursor(){
                         }
                     }
                 }
-                switch(currentlySelected.id) {
-                    case "greenTower":
-                        var greenTower = new GreenTower(1);
-                        greenTower.draw(closestCell.x, closestCell.y);
-                        break;
-                    case "purpleTower":
-                        var purpleTower = new PurpleTower(1);
-                        purpleTower.draw(closestCell.x, closestCell.y);
-                        break;
-                    case "blueTower":
-                        var blueTower = new BlueTower(1);
-                        blueTower.draw(closestCell.x, closestCell.y);
-                        break;
-                    case "goldTower":
-                        var goldTower = new GoldTower(1);
-                        goldTower.draw(closestCell.x, closestCell.y);
-                        break;
+
+                // Check to see if cell is in the path
+                for (var i = 0; i < pathArray.length; i++) {
+                    if (closestCell.x == pathArray[i].x && closestCell.y == pathArray[i].y) {
+                        validCell = false;
+                        console.error("Tower placement in path");
+                    }
+                }
+
+                // Check to see if cell is already occupied by a tower
+                for (var i = 0; i < towerArray.length; i++) {
+                    if (closestCell.x + 2 == towerArray[i].x && closestCell.y + 2 == towerArray[i].y) {
+                        validCell = false;
+                        //console.error("Tower placement in occupied cell");
+                    }
+                }
+
+                if (validCell) {
+                    switch(currentlySelected.id) {
+                        case "greenTower":
+                            var greenTower = new GreenTower(1);
+                            greenTower.draw(closestCell.x, closestCell.y);
+                            console.info("Tower placed: greenTower");
+                            return true;
+                        case "purpleTower":
+                            var purpleTower = new PurpleTower(1);
+                            purpleTower.draw(closestCell.x, closestCell.y);
+                            console.info("Tower placed: purpleTower");
+                            return true;
+                        case "blueTower":
+                            var blueTower = new BlueTower(1);
+                            blueTower.draw(closestCell.x, closestCell.y);
+                            console.info("Tower placed: blueTower");
+                            return true;
+                        case "goldTower":
+                            var goldTower = new GoldTower(1);
+                            goldTower.draw(closestCell.x, closestCell.y);
+                            console.info("Tower placed: goldTower");
+                            return true;
+                    }
+                } else {
+                    return false;
                 }
             }
         }
@@ -1007,7 +1137,7 @@ class PurpleTower extends Tower {
                 // ctx.closePath();
                 break;
             case 4:
-                this.damage = 4.75;
+                this.damage = 5;
                 this.range = 275;
                 this.name = "Purple Tower level " + this.level;
                 // // Range Circle
@@ -1060,7 +1190,7 @@ class PurpleTower extends Tower {
                             enemy.health = enemy.health - (this.damage * 0.7);
                             break;
                         case "purple":
-                            enemy.health = enemy.health - (this.damage * 1.75);
+                            enemy.health = enemy.health - (this.damage * 2);
                             break;
                         case "blue":
                             enemy.health = enemy.health - this.damage;
@@ -2326,7 +2456,7 @@ class BlueEnemy extends Enemy {
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
-        this.speed = speed * 1.3;
+        this.speed = speed * 1.4;
         this.img = document.getElementById("blueEnemy");
         this.initalHealth = (this.health * 0.4);
 
@@ -2837,7 +2967,7 @@ var rounds = [
         b: 0,
         g: 10,
         p: 0,
-        baseHealth: 2000,
+        baseHealth: 1750,
         baseMoney: 80,
         baseSpeed: 1.25,
         count: function() {
@@ -2849,7 +2979,7 @@ var rounds = [
         b: 12,
         g: 0,
         p: 12,
-        baseHealth: 2500,
+        baseHealth: 2000,
         baseMoney: 90,
         baseSpeed: 1.25,
         count: function() {
@@ -2861,7 +2991,7 @@ var rounds = [
         b: 10,
         g: 10,
         p: 10,
-        baseHealth: 3200,
+        baseHealth: 2600,
         baseMoney: 100,
         baseSpeed: 1.5,
         count: function() {
@@ -2894,9 +3024,10 @@ function checkWaveComplete() {
                 lives -= 1;
                 livesNumber.innerText = lives;
                 enemy.health = 0;
-                enemy.checkHealth();
                 // Subract money earned because enemy self destructed after crossing finish line
                 money -= enemy.money;
+                enemy.checkHealth();
+                enemyArray.splice(i, 1);
                 console.warn("Enemy crossed finish line");
             }
         }
