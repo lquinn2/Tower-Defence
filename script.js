@@ -1,3 +1,5 @@
+
+
 // For map and path
 let canvas = document.getElementById("canvas");
 let canvas2 = document.getElementById("canvas2");
@@ -166,8 +168,6 @@ function clickDown(e){
     console.log(mouseY);
     selectedTowerId = e.target.id;
     currentScreenWidth = document.body.clientWidth;
-    console.warn("FULL Window width: " + fullScreenWidth);
-    console.warn("CURRENT Window width: " + currentScreenWidth);
 }
 
 function drag(e){
@@ -204,8 +204,39 @@ function clickUp(){
     somethingIsSelected = false;
     document.onmouseup = null;
     document.onmousemove = null;
+    console.log(event.target.id);
     setUITowerPositions();
-    placeTowerUnderCursor();
+    switch (event.target.id) {
+        case "greenTower":
+            if (money >= 150) {
+                money -= 150;
+                moneyNumber.innerText = money;
+                placeTowerUnderCursor();
+            }
+            break;
+        case "purpleTower":
+            if (money >= 200) {
+                money -= 200;
+                moneyNumber.innerText = money;
+                placeTowerUnderCursor();
+            }
+            break;
+        case "blueTower":
+            if (money >= 200) {
+                money -= 200;
+                moneyNumber.innerText = money;
+                placeTowerUnderCursor();
+            }
+            break;
+        case "goldTower":
+            if (money >= 250) {
+                money -= 200;
+                moneyNumber.innerText = money;
+                placeTowerUnderCursor();
+            }
+            break;
+    }
+    
     selectedTowerId = null;    
 }
 
@@ -236,13 +267,13 @@ for (var i = 0; i < (horizontalSquareCount * verticalSquareCount); i++) {
 function shadeCellUnderCursor(e){
     ctx.save();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    console.error((fullScreenWidth - currentScreenWidth));
     var closestCell;
     var cellChanged = false;
     for (var i = 0; i < gridArray.length; i++) {
         cell = gridArray[i];
         if ((e.clientX + ((fullScreenWidth - currentScreenWidth) / 2) - 60 > cell.x && e.clientX + ((fullScreenWidth - currentScreenWidth) / 2) - 60 < (cell.x + 50)) && (e.clientY - 35 > cell.y && e.clientY - 35 < (cell.y + 50))) {
             if (closestCell != cell) {
+                
                 closestCell = cell;
                 cellChanged = true;
             }
@@ -254,7 +285,7 @@ function shadeCellUnderCursor(e){
         cellChanged = false;
     }
     drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
-    ctx.restore();
+    ctx.restore(); 
 }
 
 // Place tower on mouse up
@@ -316,17 +347,33 @@ canvas4.addEventListener('click', function(event){
     console.log(cursorX, cursorY);
     var foundTower = false;
 
+    var baseUpgradeInnerHTML = "Upgrade";
+    var baseSellInnerHTML = "Sell";
+
     function upgradeTower() {
         var tower = towerArray[upgradeButton.className];
-        if (tower.level < 4) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
-            tower.levelUp();
-            tower.drawRange(true);
-            descriptionName.innerHTML = "<span class='descriptionTextHeader' style='color: " + tower.color + "'>" + tower.name + "</span>";
-            descriptionDamage.innerHTML = "<span class='descriptionTextHeader'> Damage: &nbsp; &nbsp; </span>" + tower.damage;
-            descriptionRange.innerHTML = "<span class='descriptionTextHeader'> Range: &nbsp; &nbsp; </span>" + tower.range;
-            console.log("LEVEL: " + towerArray[upgradeButton.className].level);
+        if (money >= tower.upgradeCost) {
+            money = money - tower.upgradeCost;
+            moneyNumber.innerText = money;
+            if (tower.level < 4) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawBoard('dodgerblue', 'black', "rgb(200, 200, 200)");
+                tower.levelUp();
+                tower.drawRange(true);
+                descriptionName.innerHTML = "<span class='descriptionTextHeader' style='color: " + tower.color + "'>" + tower.name + "</span>";
+                descriptionDamage.innerHTML = "<span class='descriptionTextHeader'> Damage: &nbsp; &nbsp; </span>" + tower.damage;
+                descriptionRange.innerHTML = "<span class='descriptionTextHeader'> Range: &nbsp; &nbsp; </span>" + tower.range;
+                console.log("LEVEL: " + towerArray[upgradeButton.className].level);
+                
+                if (tower.upgradeCost != null) {
+                    upgradeButton.innerHTML = baseUpgradeInnerHTML + "<div style='color: cyan;'>[" + tower.upgradeCost + "]</div>";
+                    sellButton.innerHTML = baseSellInnerHTML + "<div style='color: lime;'>[" + tower.price / 2 + "]</div>";
+                } else {
+                    upgradeButton.innerHTML = "MAX LEVEL";
+                    sellButton.innerHTML = baseSellInnerHTML + "<div style='color: lime;'>[" + tower.price / 2 + "]</div>";
+                }
+            }
+            console.log(tower.price);
         }
     }
 
@@ -335,6 +382,9 @@ canvas4.addEventListener('click', function(event){
         var tower = towerArray[upgradeButton.className];
         ctx2.clearRect(tower.x - 1, tower.y - 1, tower.width + 2, tower.height + 2);
         towerArray.splice(upgradeButton.className, 1);
+
+        money += tower.price / 2;
+        moneyNumber.innerText = money;
 
         upgradeButton.className = "";
 
@@ -369,6 +419,17 @@ canvas4.addEventListener('click', function(event){
                 
                 upgradeButton.className = i;
                 upgradeButton.addEventListener('click', upgradeTower);
+
+                console.warn("Tower Price :  " + towerArray[i].price);
+
+                if (towerArray[i].upgradeCost != null) {
+                    upgradeButton.innerHTML = baseUpgradeInnerHTML + "<div style='color: cyan;'>[" + towerArray[i].upgradeCost + "]</div>";
+                    sellButton.innerHTML = baseSellInnerHTML + "<div style='color: lime;'>[" + towerArray[i].price / 2 + "]</div>";
+                } else {
+                    upgradeButton.innerHTML = "MAX LEVEL";
+                    sellButton.innerHTML = baseSellInnerHTML + "<div style='color: lime;'>[" + towerArray[i].price / 2 + "]</div>";                    
+                }
+
                 sellButton.addEventListener('click', sellTower);
             }
     }
@@ -449,7 +510,8 @@ class GreenTower extends Tower {
         this.y = 0;
         this.range = 125;
         this.damage = 1;
-        this.price = 100;
+        this.price = 150;
+        this.upgradeCost = 300;
     }
 
     draw(x, y) {
@@ -675,6 +737,8 @@ class GreenTower extends Tower {
                     ctx2.closePath();
                     break;
                 case 2:
+                    this.upgradeCost = 750;
+                    this.price += 300;
                     // Create Range
                     this.createRange(this.level);
                     // level 1 decal
@@ -694,6 +758,8 @@ class GreenTower extends Tower {
                     ctx2.closePath();
                     break;
                 case 3:
+                    this.upgradeCost = 1500;
+                    this.price += 750;
                     // Create Range
                     this.createRange(this.level);
                     ctx2.moveTo(x + (this.width / 3), y + (this.height / 3));
@@ -719,6 +785,8 @@ class GreenTower extends Tower {
                     ctx2.closePath();
                     break;
                 case 4:
+                    this.upgradeCost = null; 
+                    this.price += 1500;
                     // Create Range
                     this.createRange(this.level);
                     ctx2.moveTo(x + (this.width / 3), y + (this.height / 3));
@@ -786,6 +854,8 @@ class PurpleTower extends Tower {
         this.y = 0;
         this.range = 175;
         this.damage = 1;
+        this.price = 200;
+        this.upgradeCost = 500;
     }
 
     draw(x, y) {
@@ -994,6 +1064,8 @@ class PurpleTower extends Tower {
                     ctx2.closePath();
                     break;
                 case 2:
+                    this.upgradeCost = 1000;
+                    this.price += 500;
                     // Create Range
                     this.createRange(this.level);
                     // level 2 decal
@@ -1010,6 +1082,8 @@ class PurpleTower extends Tower {
                     ctx2.closePath();
                     break;
                 case 3:
+                    this.upgradeCost = 2000;
+                    this.price += 1000;
                     // Create Range
                     this.createRange(this.level);
                     // level 3 decal
@@ -1033,6 +1107,8 @@ class PurpleTower extends Tower {
                     ctx2.closePath();
                     break;
                 case 4:
+                    this.upgradeCost = null;
+                    this.price += 2000;
                     // Create Range
                     this.createRange(this.level);
                     // level 2 decal
@@ -1094,6 +1170,8 @@ class BlueTower extends Tower {
         this.y = 0;
         this.range = 100;
         this.damage = 1;
+        this.price = 200;
+        this.upgradeCost = 500;
     }
 
     draw(x, y) {
@@ -1257,6 +1335,8 @@ class BlueTower extends Tower {
                     ctx2.closePath();
                     break;
                 case 2:
+                    this.upgradeCost = 1000;
+                    this.price += 500;
                     // Create Range
                     this.createRange(this.level);
                     // level 2 decal
@@ -1266,6 +1346,8 @@ class BlueTower extends Tower {
                     ctx2.lineWidth = 1;
                     break;
                 case 3:
+                    this.upgradeCost = 2000;
+                    this.price += 1000
                     // Create Range
                     this.createRange(this.level);
                     // level 3 decal
@@ -1275,6 +1357,8 @@ class BlueTower extends Tower {
                     ctx2.lineWidth = 1;
                     break;
                 case 4:
+                    this.upgradeCost = null;
+                    this.price += 2000;
                     // Create Range
                     this.createRange(this.level);
                     // level 4 decal
@@ -1319,6 +1403,8 @@ class GoldTower extends Tower {
         this.y = 0;
         this.range = 140;
         this.damage = 1;
+        this.price = 250;
+        this.upgradeCost = 750;
     }
 
     draw(x, y) {
@@ -1495,86 +1581,92 @@ class GoldTower extends Tower {
             var y = this.y;
 
             // Shape
-        ctx2.beginPath();
-        ctx2.rect(x, y, this.width, this.height);
-        ctx2.fillStyle = this.backgroundColor;
-        ctx2.fill();
-        ctx2.closePath();
-        ctx2.beginPath();
-        ctx2.lineWidth = 1;
-        ctx2.strokeStyle = this.color;
-        ctx2.strokeRect(x, y, this.width, this.height);
-        ctx2.closePath();
-        // Decal
-        switch(this.level){
-            case 1:
-                // Create Range
-                this.createRange(this.level);
-                // level 1 decal
-                ctx2.arc(x + this.width/2, y + this.height/2, 4, Math.PI, 4*Math.PI);
-                ctx2.stroke();
-                ctx2.closePath();
-                break;
-            case 2:
-                // Create Range
-                this.createRange(this.level);
-                // level 1 decal with fill
-                ctx2.arc(x + this.width/2, y + this.height/2, 2, 2*Math.PI, 4*Math.PI);
-                ctx2.fillStyle = "gold";
-                ctx2.fill();
-                ctx2.stroke();
-                ctx2.closePath();
-                // level 2 decal
-                ctx2.beginPath();
-                ctx2.arc(x + this.width/2, y + this.height/2, 8, 0*Math.PI, 4*Math.PI);
-                ctx2.stroke();
-                ctx2.closePath();
-                break;
-            case 3:
-                // Create Range
-                this.createRange(this.level);
-                // level 1 decal with fill
-                ctx2.arc(x + this.width/2, y + this.height/2, 2, 2*Math.PI, 4*Math.PI);
-                ctx2.fillStyle = "gold";
-                ctx2.fill();
-                ctx2.stroke();
-                ctx2.closePath();
-                // level 2 decal
-                ctx2.beginPath();
-                ctx2.arc(x + this.width/2, y + this.height/2, 7, 0*Math.PI, 4*Math.PI);
-                ctx2.stroke();
-                ctx2.closePath();
-                // level 32 decal
-                ctx2.beginPath();
-                ctx2.arc(x + this.width/2, y + this.height/2, 12, 0*Math.PI, 4*Math.PI);
-                ctx2.closePath();
-                ctx2.stroke();
-                break;
-            case 4:
-                // Create Range
-                this.createRange(this.level);
-                ctx2.lineWidth = 1;
-                // level 3 decal
-                ctx2.beginPath();
-                ctx2.arc(x + this.width/2, y + this.height/2, 2, 0*Math.PI, 4*Math.PI);
-                ctx2.fill();
-                ctx2.stroke();
-                ctx2.closePath();
-                ctx2.beginPath();
-                ctx2.arc(x + this.width/2, y + this.height/2, 7, 0*Math.PI, 4*Math.PI);
-                ctx2.closePath();
-                ctx2.stroke();
-                ctx2.beginPath();
-                ctx2.arc(x + this.width/2, y + this.height/2, 12, 0*Math.PI, 4*Math.PI);
-                ctx2.closePath();
-                ctx2.stroke();
-                // level 4 decal
-                ctx2.beginPath();
-                ctx2.arc(x + this.width/2, y + this.height/2, 17, 0*Math.PI, 4*Math.PI);
-                ctx2.closePath();
-                ctx2.stroke();
-                break;
-        }
+            ctx2.beginPath();
+            ctx2.rect(x, y, this.width, this.height);
+            ctx2.fillStyle = this.backgroundColor;
+            ctx2.fill();
+            ctx2.closePath();
+            ctx2.beginPath();
+            ctx2.lineWidth = 1;
+            ctx2.strokeStyle = this.color;
+            ctx2.strokeRect(x, y, this.width, this.height);
+            ctx2.closePath();
+            // Decal
+            switch(this.level){
+                case 1:
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 1 decal
+                    ctx2.arc(x + this.width/2, y + this.height/2, 4, Math.PI, 4*Math.PI);
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    break;
+                case 2:
+                    this.upgradeCost = 1200;
+                    this.price += 750;
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 1 decal with fill
+                    ctx2.arc(x + this.width/2, y + this.height/2, 2, 2*Math.PI, 4*Math.PI);
+                    ctx2.fillStyle = "gold";
+                    ctx2.fill();
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    // level 2 decal
+                    ctx2.beginPath();
+                    ctx2.arc(x + this.width/2, y + this.height/2, 8, 0*Math.PI, 4*Math.PI);
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    break;
+                case 3:
+                    this.upgradeCost = 2500;
+                    this.price += 1200;
+                    // Create Range
+                    this.createRange(this.level);
+                    // level 1 decal with fill
+                    ctx2.arc(x + this.width/2, y + this.height/2, 2, 2*Math.PI, 4*Math.PI);
+                    ctx2.fillStyle = "gold";
+                    ctx2.fill();
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    // level 2 decal
+                    ctx2.beginPath();
+                    ctx2.arc(x + this.width/2, y + this.height/2, 7, 0*Math.PI, 4*Math.PI);
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    // level 32 decal
+                    ctx2.beginPath();
+                    ctx2.arc(x + this.width/2, y + this.height/2, 12, 0*Math.PI, 4*Math.PI);
+                    ctx2.closePath();
+                    ctx2.stroke();
+                    break;
+                case 4:
+                    this.upgradeCost = null;
+                    this.price += 2500;
+                    // Create Range
+                    this.createRange(this.level);
+                    ctx2.lineWidth = 1;
+                    // level 3 decal
+                    ctx2.beginPath();
+                    ctx2.arc(x + this.width/2, y + this.height/2, 2, 0*Math.PI, 4*Math.PI);
+                    ctx2.fill();
+                    ctx2.stroke();
+                    ctx2.closePath();
+                    ctx2.beginPath();
+                    ctx2.arc(x + this.width/2, y + this.height/2, 7, 0*Math.PI, 4*Math.PI);
+                    ctx2.closePath();
+                    ctx2.stroke();
+                    ctx2.beginPath();
+                    ctx2.arc(x + this.width/2, y + this.height/2, 12, 0*Math.PI, 4*Math.PI);
+                    ctx2.closePath();
+                    ctx2.stroke();
+                    // level 4 decal
+                    ctx2.beginPath();
+                    ctx2.arc(x + this.width/2, y + this.height/2, 17, 0*Math.PI, 4*Math.PI);
+                    ctx2.closePath();
+                    ctx2.stroke();
+                    break;
+            }
         }
     }
 
@@ -2900,5 +2992,5 @@ function createRound(round){
     }
     
     createEnemy();
-    var enemyLoop = setInterval(createEnemy, 2000);
+    var enemyLoop = setInterval(createEnemy, 1600);
 }
