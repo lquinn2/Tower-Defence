@@ -784,7 +784,7 @@ class GreenTower extends Tower {
                 // ctx.closePath();
                 break;
             case 3:
-                this.damage = 3.5;
+                this.damage = 4;
                 this.range = 175;
                 this.value = 800;
                 this.name = "Green Tower level " + this.level;
@@ -795,7 +795,7 @@ class GreenTower extends Tower {
                 // ctx.closePath();
                 break;
             case 4:
-                this.damage = 5.75;
+                this.damage = 6;
                 this.range = 200;
                 this.value = 1500;
                 this.name = "Green Tower level " + this.level;
@@ -1604,7 +1604,7 @@ class GoldTower extends Tower {
         this.x = 0;
         this.y = 0;
         this.range = 140;
-        this.damage = 1;
+        this.damage = 1.2;
         this.price = 250;
         this.upgradeCost = 750;
     }
@@ -1710,8 +1710,8 @@ class GoldTower extends Tower {
                 // ctx.closePath();
                 break;
             case 2:
-                this.damage = 2.25;
-                this.range = 160;
+                this.damage = 2.75;
+                this.range = 170;
                 this.name = "Gold Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
@@ -1720,8 +1720,8 @@ class GoldTower extends Tower {
                 // ctx.closePath();
                 break;
             case 3:
-                this.damage = 4.5;
-                this.range = 180;
+                this.damage = 4.75;
+                this.range = 190;
                 this.name = "Gold Tower level " + this.level;
                 // // Range Circle
                 // ctx.beginPath();
@@ -1730,8 +1730,8 @@ class GoldTower extends Tower {
                 // ctx.closePath();
                 break;
             case 4:
-                this.damage = 7.2;
-                this.range = 215;
+                this.damage = 7.25;
+                this.range = 225;
                 this.name = "Gold Tower level " + this.level;            
                 // // Range Circle
                 // ctx.beginPath();
@@ -2258,7 +2258,7 @@ class PurpleEnemy extends Enemy {
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
         this.direction = "down";
-        this.speed = speed * 0.7;
+        this.speed = speed * 0.625;
         this.img = document.getElementById("purpleEnemy");
         this.initalHealth = (this.health * 0.571);
 
@@ -2668,7 +2668,7 @@ class BlueEnemy extends Enemy {
 //-- Gold Enemy --//
 class GoldEnemy extends Enemy {
     constructor(health, money, speed){
-        super(health * 0.75, money);
+        super(health * 0.85, money);
         this.color = "gold";
         this.waypoint = 0;
         this.coordinate = {x: waypoints[this.waypoint].x, y: waypoints[this.waypoint].y};
@@ -3011,7 +3011,7 @@ var rounds = [
         b: 0,
         g: 40,
         p: 0,
-        baseHealth: 5000,
+        baseHealth: 3500,
         baseMoney: 40,
         baseSpeed: 1.5,
         count: function() {
@@ -3059,9 +3059,141 @@ var rounds = [
         b: 0,
         g: 0,
         p: 50,
-        baseHealth: 8000,
+        baseHealth: 6000,
         baseMoney: 75,
         baseSpeed: 0.95,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    }, 
+    round16 = {
+        y: 15,
+        b: 15,
+        g: 15,
+        p: 15,
+        baseHealth: 6250,
+        baseMoney: 80,
+        baseSpeed: 1.5,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round17 = {
+        y: 0,
+        b: 100,
+        g: 0,
+        p: 0,
+        baseHealth: 3000,
+        baseMoney: 25,
+        baseSpeed: 4,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round18 = {
+        y: 50,
+        b: 15,
+        g: 15,
+        p: 15,
+        baseHealth: 7200,
+        baseMoney: 60,
+        baseSpeed: 2.75,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round19 = {
+        y: 20,
+        b: 20,
+        g: 20,
+        p: 20,
+        baseHealth: 8000,
+        baseMoney: 70,
+        baseSpeed: 1.5,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round20 = {
+        y: 60,
+        b: 1,
+        g: 1,
+        p: 60,
+        baseHealth: 12500,
+        baseMoney: 75,
+        baseSpeed: 2,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round21 = {
+        y: 25,
+        b: 25,
+        g: 25,
+        p: 25,
+        baseHealth: 10000,
+        baseMoney: 85,
+        baseSpeed: 2,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round22 = {
+        y: 0,
+        b: 35,
+        g: 35,
+        p: 0,
+        baseHealth: 11500,
+        baseMoney: 90,
+        baseSpeed: 2,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round23 = {
+        y: 35,
+        b: 0,
+        g: 0,
+        p: 35,
+        baseHealth: 12750,
+        baseMoney: 95,
+        baseSpeed: 2,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round24 = {
+        y: 0,
+        b: 0,
+        g: 40,
+        p: 40,
+        baseHealth: 13500,
+        baseMoney: 100,
+        baseSpeed: 2,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round25 = {
+        y: 60,
+        b: 60,
+        g: 60,
+        p: 60,
+        baseHealth: 20000,
+        baseMoney: 125,
+        baseSpeed: 2.5,
+        count: function() {
+            return (this.g + this.p + this.b + this.y); 
+        }
+    },
+    round25 = {
+        y: 60,
+        b: 60,
+        g: 60,
+        p: 60,
+        baseHealth: 5500,
+        baseMoney: 100,
+        baseSpeed: 8,
         count: function() {
             return (this.g + this.p + this.b + this.y); 
         }
@@ -3158,6 +3290,15 @@ function startWave(){
                     waveStarted = false;
                     roundCreated = false;
                     currentRound++;
+                    // Manual re-update labels
+                    var greens = document.getElementById('greenNumber');
+                    var purples = document.getElementById('purpleNumber');
+                    var blues = document.getElementById('blueNumber');
+                    var golds = document.getElementById('goldNumber');
+                    greens.innerText = rounds[currentRound].g;
+                    purples.innerText = rounds[currentRound].p;
+                    blues.innerText = rounds[currentRound].b;
+                    golds.innerText = rounds[currentRound].y;
                 }
                 setTimeout(stopRound, 5);
             }

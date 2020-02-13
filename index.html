@@ -54,7 +54,7 @@
         }
         #towerHolder {
             position: relative;
-            background-color: #005e61;
+            background-color: cadetblue;
             margin-left: auto;
             margin-right: auto;
             height: 225px;
@@ -124,29 +124,31 @@
             top: 42.5px;
             line-height: 90%;
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
+            font-size: 16px;
+            font-weight: bolder;
             text-transform: uppercase;
             text-justify: inter-word;
+            text-shadow: black 1.2px 1.2px;
         }
         #greenCaption {
             color: green;
-            top: 55px;
-            left: 55px;
+            top: 53px;
+            left: 51px;
         }
         #purpleCaption {
             color: purple;
-            top: 125px;
-            left: 55px;
+            top: 119px;
+            left: 51px;
         }
         #blueCaption {
             color: blue;
-            top: 32.5px;
-            left: 125px;
+            top: 24px;
+            left: 121px;
         }
         #goldCaption {
             color: gold;
-            top: 102.5px;
-            left: 125px;
+            top: 90px;
+            left: 121px;
         }
         #descriptionHolder {
             visibility: hidden;
@@ -308,6 +310,14 @@
             font-weight: bold;
             text-align: center;
         }
+        #versionNumber {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-size: 0.75em;
+            font-family: 'Courier New', Courier, monospace;
+        }
     </style>
 </head>
 
@@ -377,6 +387,7 @@
             </div>
         </div>
     </div>
+    <div id="versionNumber">v1.0</div>
 </body>
 <script src="script.js"></script>
 
